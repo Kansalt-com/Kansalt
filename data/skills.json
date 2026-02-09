@@ -1,0 +1,276 @@
+{
+  "categories": {
+    "IT": {
+      "DevOps": {
+        "label": "DevOps",
+        "aliases": ["devops", "dev ops", "devops engineer", "infra engineer", "infrastructure"]
+      },
+      "SRE": {
+        "label": "SRE",
+        "aliases": ["sre", "site reliability", "site reliability engineer"]
+      },
+      "CI/CD": {
+        "label": "CI/CD",
+        "aliases": ["ci/cd", "cicd", "pipelines", "release pipelines", "continuous integration", "continuous deployment"]
+      },
+      "Jenkins": {
+        "label": "Jenkins",
+        "aliases": ["jenkins"]
+      },
+      "GitHub Actions": {
+        "label": "GitHub Actions",
+        "aliases": ["github actions", "github"]
+      },
+      "Azure DevOps": {
+        "label": "Azure DevOps",
+        "aliases": ["azure devops", "ado", "azure pipelines"]
+      },
+      "GitLab CI": {
+        "label": "GitLab CI",
+        "aliases": ["gitlab ci", "gitlab pipelines", "gitlab"]
+      },
+      "Terraform": {
+        "label": "Terraform",
+        "aliases": ["terraform", "tf", "iac", "infrastructure as code"]
+      },
+      "Ansible": {
+        "label": "Ansible",
+        "aliases": ["ansible"]
+      },
+      "Docker": {
+        "label": "Docker",
+        "aliases": ["docker", "containers", "containerization"]
+      },
+      "Kubernetes": {
+        "label": "Kubernetes",
+        "aliases": ["kubernetes", "k8s", "k8"]
+      },
+      "Helm": {
+        "label": "Helm",
+        "aliases": ["helm", "helm charts"]
+      },
+      "Prometheus": {
+        "label": "Prometheus",
+        "aliases": ["prometheus"]
+      },
+      "Grafana": {
+        "label": "Grafana",
+        "aliases": ["grafana"]
+      },
+      "ELK": {
+        "label": "ELK",
+        "aliases": ["elk", "elasticsearch", "logstash", "kibana"]
+      },
+      "Linux": {
+        "label": "Linux",
+        "aliases": ["linux", "ubuntu", "debian", "centos", "rhel", "redhat"]
+      },
+      "Bash": {
+        "label": "Bash",
+        "aliases": ["bash", "shell", "shell scripting"]
+      },
+      "Python": {
+        "label": "Python",
+        "aliases": ["python", "py"]
+      },
+      "Java": {
+        "label": "Java",
+        "aliases": ["java"]
+      },
+      "Go": {
+        "label": "Go",
+        "aliases": ["golang", "go"]
+      },
+      "Node.js": {
+        "label": "Node.js",
+        "aliases": ["node", "nodejs", "node.js"]
+      },
+      "JavaScript": {
+        "label": "JavaScript",
+        "aliases": ["javascript", "js"]
+      },
+      "React": {
+        "label": "React",
+        "aliases": ["react", "react.js"]
+      },
+      "SQL": {
+        "label": "SQL",
+        "aliases": ["sql", "postgres", "mysql", "mssql", "postgresql"]
+      },
+      "MongoDB": {
+        "label": "MongoDB",
+        "aliases": ["mongodb", "mongo"]
+      },
+      "Redis": {
+        "label": "Redis",
+        "aliases": ["redis"]
+      },
+      "AWS": {
+        "label": "AWS",
+        "aliases": ["aws", "amazon web services"]
+      },
+      "Azure": {
+        "label": "Azure",
+        "aliases": ["azure", "microsoft azure"]
+      },
+      "GCP": {
+        "label": "GCP",
+        "aliases": ["gcp", "google cloud"]
+      },
+      "EC2": {
+        "label": "EC2",
+        "aliases": ["ec2"]
+      },
+      "S3": {
+        "label": "S3",
+        "aliases": ["s3"]
+      },
+      "Security": {
+        "label": "Security",
+        "aliases": ["security", "secure", "hardening", "cybersecurity"]
+      },
+      "API": {
+        "label": "API",
+        "aliases": ["api", "rest", "rest api", "graphql"]
+      }
+    },
+    "Healthcare": {
+      "Medical Transcription": {
+        "label": "Medical Transcription",
+        "aliases": ["medical transcription", "medical transcriptionist", "transcriptionist", "srt"]
+      },
+      "Medical Coding": {
+        "label": "Medical Coding",
+        "aliases": ["medical coding", "coder", "cpc", "ccs"]
+      },
+      "Medical Scribe": {
+        "label": "Medical Scribe",
+        "aliases": ["medical scribe", "scribe", "clinical scribe"]
+      },
+      "Virtual Medical Assistant": {
+        "label": "Virtual Medical Assistant",
+        "aliases": ["virtual medical assistant", "medical virtual assistant", "mva"]
+      },
+      "Prior Authorization": {
+        "label": "Prior Authorization",
+        "aliases": ["prior authorization", "prior auth", "insurance authorization"]
+      },
+      "RCM": {
+        "label": "RCM",
+        "aliases": ["revenue cycle management", "rcm", "billing"]
+      },
+      "EMR/EHR": {
+        "label": "EMR/EHR",
+        "aliases": ["emr", "ehr", "epic", "cerner", "athena"]
+      },
+      "ICD": {
+        "label": "ICD",
+        "aliases": ["icd", "icd-10", "icd10"]
+      },
+      "CPT": {
+        "label": "CPT",
+        "aliases": ["cpt", "cpt coding"]
+      },
+      "HCC": {
+        "label": "HCC",
+        "aliases": ["hcc", "risk adjustment"]
+      }
+    },
+    "BPO": {
+      "Customer Support": {
+        "label": "Customer Support",
+        "aliases": ["customer support", "support", "customer service"]
+      },
+      "Data Entry": {
+        "label": "Data Entry",
+        "aliases": ["data entry", "data entry operator", "deo"]
+      },
+      "Chat Support": {
+        "label": "Chat Support",
+        "aliases": ["chat support", "live chat"]
+      },
+      "Email Support": {
+        "label": "Email Support",
+        "aliases": ["email support"]
+      }
+    },
+    "Admin": {
+      "Virtual Assistant": {
+        "label": "Virtual Assistant",
+        "aliases": ["virtual assistant", "va"]
+      },
+      "Executive Assistant": {
+        "label": "Executive Assistant",
+        "aliases": ["executive assistant", "ea"]
+      },
+      "Administrative": {
+        "label": "Administrative",
+        "aliases": ["administrative", "admin"]
+      },
+      "Clerical": {
+        "label": "Clerical",
+        "aliases": ["clerical", "clerk"]
+      }
+    },
+    "Sales": {
+      "Sales Executive": {
+        "label": "Sales Executive",
+        "aliases": ["sales executive", "account executive", "ae"]
+      },
+      "Business Development": {
+        "label": "Business Development",
+        "aliases": ["business development", "bd"]
+      },
+      "Account Manager": {
+        "label": "Account Manager",
+        "aliases": ["account manager", "am"]
+      }
+    },
+    "HR": {
+      "HR Coordinator": {
+        "label": "HR Coordinator",
+        "aliases": ["hr coordinator", "hr"]
+      },
+      "Recruiter": {
+        "label": "Recruiter",
+        "aliases": ["recruiter", "recruitment", "recruiting"]
+      },
+      "HR Manager": {
+        "label": "HR Manager",
+        "aliases": ["hr manager", "human resources"]
+      }
+    },
+    "Finance": {
+      "Accountant": {
+        "label": "Accountant",
+        "aliases": ["accountant", "accounting"]
+      },
+      "Financial Analyst": {
+        "label": "Financial Analyst",
+        "aliases": ["financial analyst", "finance analyst"]
+      },
+      "Bookkeeper": {
+        "label": "Bookkeeper",
+        "aliases": ["bookkeeper", "bookkeeping"]
+      }
+    }
+  },
+  "all_skills": [
+    "DevOps", "SRE", "Platform Engineering", "CI/CD", "Jenkins", "GitHub Actions",
+    "Azure DevOps", "GitLab CI", "Terraform", "Pulumi", "Ansible", "Chef", "Puppet",
+    "Docker", "Kubernetes", "Helm", "Istio", "Linkerd", "Nginx", "Traefik",
+    "Prometheus", "Grafana", "ELK", "OpenTelemetry", "Datadog", "New Relic", "Splunk",
+    "Linux", "Bash", "Python", "Go", "Java", "C#", "Node.js", "JavaScript", "TypeScript",
+    "React", "Next.js", "SQL", "PostgreSQL", "MySQL", "MongoDB", "Redis", "Kafka", "RabbitMQ",
+    "REST API", "GraphQL", "Microservices", "Serverless", "AWS", "Azure", "GCP",
+    "EC2", "S3", "EKS", "AKS", "GKE", "CloudFormation", "ARM Templates", "Bicep",
+    "Security", "DevSecOps", "IAM", "Key Vault", "Vault", "SAST", "DAST", "OWASP",
+    "Medical Transcription", "Medical Coding", "Medical Scribe", "Virtual Medical Assistant",
+    "Prior Authorization", "RCM", "Medical Billing", "EMR/EHR", "ICD", "CPT", "HCC",
+    "Customer Support", "Data Entry", "Chat Support", "Email Support",
+    "Virtual Assistant", "Executive Assistant", "Administrative", "Clerical",
+    "Sales Executive", "Business Development", "Account Manager",
+    "HR Coordinator", "Recruiter", "HR Manager",
+    "Accountant", "Financial Analyst", "Bookkeeper"
+  ]
+}

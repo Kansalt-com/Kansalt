@@ -1,0 +1,36 @@
+services:
+  - type: web
+    name: kansalt
+    env: python
+    plan: free
+    buildCommand: pip install -r requirements.txt
+    startCommand: streamlit run app/main.py --server.port=$PORT --server.address=0.0.0.0
+    
+    # Port configuration
+    envVars:
+      - key: PORT
+        value: 8501
+      - key: STREAMLIT_SERVER_HEADLESS
+        value: true
+      - key: STREAMLIT_LOGGER_LEVEL
+        value: info
+      - key: STREAMLIT_SERVER_ENABLE_XSRF_PROTECTION
+        value: true
+    
+    # Health check
+    healthCheckPath: /_stcore/health
+    
+    # Domains (replace with your actual domain after deployment)
+    domains:
+      - kansalt.onrender.com
+    
+    # Build settings
+    buildFilter:
+      paths:
+        - source: /
+          ignore:
+            - node_modules
+            - __pycache__
+            - .git
+            - .pytest_cache
+            - .venv
