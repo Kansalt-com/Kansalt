@@ -1,0 +1,480 @@
+/* =========================================================
+   KANSALT / JOB AGGREGATOR PORTAL - GLOBAL THEME + MOTION
+   Teal + White (Premium, calm, dashboard-friendly)
+   Drop this file at: public/styles.css
+   ========================================================= */
+
+/* ---------- Theme Tokens ---------- */
+:root {
+  /* Core palette */
+  --bg-0: #f4fafa;        /* app background */
+  --bg-1: #e6f4f3;        /* section tint */
+  --card: #ffffff;        /* surfaces */
+  --teal-700: #0f766e;    /* primary */
+  --teal-500: #14b8a6;    /* secondary */
+  --teal-200: #99f6e4;    /* light accent */
+  --border: #d1faf5;      /* subtle borders */
+
+  /* Text */
+  --text: #0f172a;
+  --text-2: #475569;
+  --muted: #6b7280;
+
+  /* Shadows */
+  --shadow-sm: 0 6px 18px rgba(15, 118, 110, 0.06);
+  --shadow-md: 0 14px 32px rgba(15, 118, 110, 0.12);
+
+  /* Motion */
+  --ease: cubic-bezier(0.4, 0, 0.2, 1);
+  --dur: 220ms;
+
+  /* Radius */
+  --r-md: 16px;
+  --r-sm: 12px;
+}
+
+/* ---------- Global App Background (animated, subtle) ---------- */
+html, body {
+  height: 100%;
+}
+
+body, .stApp {
+  background: linear-gradient(120deg, var(--bg-0), var(--bg-1), #f9fefe);
+  background-size: 300% 300%;
+  animation: bgShift 34s var(--ease) infinite;
+  color: var(--text);
+}
+
+@keyframes bgShift {
+  0%   { background-position: 0% 50%; }
+  50%  { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+/* ---------- Optional floating blobs (auto-injected via pseudo elements) ---------- */
+.stApp {
+  position: relative;
+  overflow-x: hidden;
+}
+
+.stApp::before,
+.stApp::after {
+  content: "";
+  position: fixed;
+  width: 520px;
+  height: 520px;
+  z-index: -1;
+  pointer-events: none;
+  filter: blur(70px);
+  opacity: 0.9;
+  background: radial-gradient(circle, rgba(20, 184, 166, 0.18), transparent 70%);
+  animation: floatBlob 18s var(--ease) infinite;
+}
+
+.stApp::before {
+  top: 8%;
+  left: -180px;
+}
+
+.stApp::after {
+  bottom: 10%;
+  right: -200px;
+  animation-delay: 6s;
+  background: radial-gradient(circle, rgba(15, 118, 110, 0.14), transparent 72%);
+}
+
+@keyframes floatBlob {
+  0%   { transform: translate3d(0, 0, 0); }
+  50%  { transform: translate3d(36px, -42px, 0); }
+  100% { transform: translate3d(0, 0, 0); }
+}
+
+/* ---------- Typography tweaks ---------- */
+h1, h2, h3, h4 {
+  color: var(--text);
+  letter-spacing: -0.01em;
+}
+
+p, li, span, label, div {
+  color: var(--text-2);
+}
+
+/* ---------- Streamlit default container spacing ---------- */
+.block-container {
+  padding-top: 1.25rem;
+  padding-bottom: 2.25rem;
+  max-width: 1240px;
+}
+
+/* ---------- Inputs: make them feel premium ---------- */
+.stTextInput input,
+.stSelectbox div[data-baseweb="select"] > div,
+.stMultiSelect div[data-baseweb="select"] > div,
+.stTextArea textarea {
+  border-radius: 12px !important;
+  border: 1px solid var(--border) !important;
+  background: rgba(255, 255, 255, 0.9) !important;
+  box-shadow: none !important;
+  transition: border-color var(--dur) var(--ease), transform var(--dur) var(--ease);
+}
+
+.stTextInput input:focus,
+.stSelectbox div[data-baseweb="select"] > div:focus-within,
+.stMultiSelect div[data-baseweb="select"] > div:focus-within,
+.stTextArea textarea:focus {
+  border-color: rgba(20, 184, 166, 0.45) !important;
+}
+
+/* ---------- Buttons ---------- */
+.stButton > button {
+  width: 100%;
+  border-radius: 12px !important;
+  border: 1px solid rgba(15, 118, 110, 0.18) !important;
+  background: var(--teal-700) !important;
+  color: #ffffff !important;
+  transition: transform var(--dur) var(--ease), box-shadow var(--dur) var(--ease), background var(--dur) var(--ease);
+  box-shadow: 0 8px 18px rgba(15, 118, 110, 0.14) !important;
+}
+
+.stButton > button:hover {
+  background: var(--teal-500) !important;
+  transform: translateY(-1px);
+  box-shadow: 0 14px 26px rgba(15, 118, 110, 0.22) !important;
+}
+
+.stButton > button:active {
+  transform: translateY(0px);
+}
+
+/* ---------- Cards / Tiles / Result Rows (works with your custom classes) ---------- */
+.card,
+.result-item,
+.education-tile,
+.business-tile,
+.sidebar-filters {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--r-md);
+  box-shadow: var(--shadow-sm);
+}
+
+/* Entry animation */
+.card,
+.result-item,
+.education-tile,
+.business-tile {
+  animation: cardEnter 520ms var(--ease) both;
+}
+
+@keyframes cardEnter {
+  from { opacity: 0; transform: translateY(10px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* Hover lift (desktop) */
+@media (hover: hover) and (pointer: fine) {
+  .card:hover,
+  .result-item:hover,
+  .education-tile:hover,
+  .business-tile:hover {
+    transform: translateY(-4px);
+    box-shadow: var(--shadow-md);
+    transition: transform var(--dur) var(--ease), box-shadow var(--dur) var(--ease), border-color var(--dur) var(--ease);
+    border-color: rgba(20, 184, 166, 0.28);
+  }
+}
+
+/* ---------- Sidebar Filters Container ---------- */
+.sidebar-filters {
+  padding: 14px 14px 10px 14px;
+  background: rgba(255, 255, 255, 0.85);
+  backdrop-filter: blur(10px);
+}
+
+/* Filter section helper classes used in your jobs.py */
+.filter-section {
+  margin: 12px 0 14px 0;
+}
+
+.filter-label {
+  font-size: 0.9rem;
+  color: var(--muted);
+  margin-bottom: 8px;
+}
+
+/* ---------- Sort Row ---------- */
+.sort-row {
+  background: rgba(255, 255, 255, 0.75);
+  border: 1px solid var(--border);
+  border-radius: var(--r-md);
+  padding: 12px 14px;
+  margin-bottom: 12px;
+  box-shadow: 0 6px 18px rgba(15, 118, 110, 0.05);
+  backdrop-filter: blur(10px);
+}
+
+/* ---------- Badges / Skill Chips ---------- */
+.badge {
+  display: inline-block;
+  padding: 4px 10px;
+  border-radius: 999px;
+  border: 1px solid rgba(20, 184, 166, 0.18);
+  background: rgba(153, 246, 228, 0.22);
+  color: var(--teal-700);
+  font-size: 0.82rem;
+  margin: 4px 6px 0 0;
+}
+
+.skills-container {
+  margin-top: 8px;
+}
+
+.skill-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 10px;
+  border-radius: 999px;
+  border: 1px solid rgba(20, 184, 166, 0.22);
+  background: rgba(153, 246, 228, 0.22);
+  color: var(--teal-700);
+  font-size: 0.85rem;
+  margin: 4px 6px 0 0;
+}
+
+.remove-btn {
+  opacity: 0.55;
+  font-weight: 700;
+}
+
+/* ---------- Result content helpers ---------- */
+.result-title {
+  margin: 0;
+  font-size: 1.1rem;
+  color: var(--text);
+}
+
+.result-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin: 6px 0 6px 0;
+  color: var(--muted);
+  font-size: 0.92rem;
+}
+
+.result-description {
+  margin: 8px 0 8px 0;
+  color: var(--text-2);
+  line-height: 1.5;
+}
+
+.result-tags {
+  margin-top: 6px;
+}
+
+/* ---------- Pagination ---------- */
+.pagination {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 8px;
+  margin-top: 14px;
+}
+
+.pagination button {
+  border: 1px solid rgba(15, 118, 110, 0.18);
+  background: rgba(255, 255, 255, 0.9);
+  color: var(--teal-700);
+  border-radius: 10px;
+  padding: 8px 12px;
+  cursor: pointer;
+  transition: background var(--dur) var(--ease), transform var(--dur) var(--ease), box-shadow var(--dur) var(--ease);
+}
+
+.pagination button:hover {
+  background: rgba(153, 246, 228, 0.18);
+  transform: translateY(-1px);
+  box-shadow: 0 10px 20px rgba(15, 118, 110, 0.10);
+}
+
+/* ---------- Tables (Streamlit dataframe) subtle polish ---------- */
+[data-testid="stDataFrame"] {
+  border: 1px solid var(--border);
+  border-radius: var(--r-md);
+  overflow: hidden;
+  background: rgba(255, 255, 255, 0.9);
+  box-shadow: var(--shadow-sm);
+}
+
+/* ---------- Reduce animation for users who prefer it ---------- */
+@media (prefers-reduced-motion: reduce) {
+  body, .stApp { animation: none !important; }
+  .stApp::before, .stApp::after { animation: none !important; }
+  .card, .result-item, .education-tile, .business-tile { animation: none !important; }
+  * { transition: none !important; }
+}
+
+/* ---------- Premium Layout Sections ---------- */
+.premium-hero {
+  position: relative;
+  padding: 22px 24px;
+  margin: 8px 0 16px 0;
+  border-radius: 18px;
+  border: 1px solid rgba(20, 184, 166, 0.2);
+  background:
+    radial-gradient(1200px 220px at 0% 0%, rgba(15, 118, 110, 0.16), transparent 60%),
+    radial-gradient(900px 220px at 100% 0%, rgba(20, 184, 166, 0.2), transparent 65%),
+    linear-gradient(135deg, rgba(255, 255, 255, 0.95), rgba(245, 255, 253, 0.96));
+  box-shadow: 0 12px 28px rgba(15, 118, 110, 0.11);
+  overflow: hidden;
+}
+
+.premium-hero::after {
+  content: "";
+  position: absolute;
+  right: -40px;
+  bottom: -40px;
+  width: 180px;
+  height: 180px;
+  border-radius: 50%;
+  border: 1px solid rgba(15, 118, 110, 0.14);
+  background: radial-gradient(circle, rgba(20, 184, 166, 0.12), transparent 68%);
+}
+
+.hero-kicker {
+  font-size: 0.78rem;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: var(--teal-700);
+  font-weight: 800;
+}
+
+.hero-title {
+  margin: 8px 0 8px 0;
+  font-size: clamp(1.4rem, 2.1vw, 2rem);
+  font-weight: 900;
+  color: var(--text);
+}
+
+.hero-sub {
+  margin: 0;
+  max-width: 780px;
+  color: var(--text-2);
+}
+
+.section-shell {
+  position: relative;
+  border-radius: 18px;
+  border: 1px solid rgba(20, 184, 166, 0.16);
+  padding: 16px;
+  margin-bottom: 16px;
+  background: rgba(255, 255, 255, 0.72);
+  backdrop-filter: blur(8px);
+}
+
+.section-shell::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: 18px;
+  pointer-events: none;
+  background-image: linear-gradient(rgba(15, 118, 110, 0.04) 1px, transparent 1px),
+                    linear-gradient(90deg, rgba(15, 118, 110, 0.04) 1px, transparent 1px);
+  background-size: 24px 24px;
+  opacity: 0.35;
+}
+
+.section-title,
+.section-subtitle,
+.search-panel,
+.premium-card,
+.new-market-note,
+.feature-list,
+.fee-strip {
+  position: relative;
+  z-index: 1;
+}
+
+.section-title {
+  font-size: 1.05rem;
+  font-weight: 800;
+  color: var(--text);
+}
+
+.section-subtitle {
+  margin: 4px 0 14px 0;
+  color: var(--muted);
+  font-size: 0.92rem;
+}
+
+.search-panel {
+  border: 1px solid rgba(15, 118, 110, 0.14);
+  border-radius: 14px;
+  padding: 12px;
+  margin-bottom: 12px;
+  background: rgba(255, 255, 255, 0.9);
+}
+
+.premium-card {
+  border: 1px solid rgba(15, 118, 110, 0.13);
+  border-radius: 14px;
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.98), rgba(245, 254, 252, 0.95));
+  box-shadow: 0 10px 24px rgba(15, 118, 110, 0.08);
+  padding: 14px;
+  margin-bottom: 12px;
+}
+
+.compact-card {
+  min-height: 116px;
+}
+
+.business-card {
+  border-left: 4px solid rgba(15, 118, 110, 0.34);
+}
+
+.education-card {
+  border-left: 4px solid rgba(20, 184, 166, 0.36);
+}
+
+.feature-list {
+  margin: 8px 0 10px 18px;
+  color: var(--text-2);
+}
+
+.feature-list li {
+  margin: 4px 0;
+}
+
+.new-market-note {
+  padding: 8px 10px;
+  border-radius: 10px;
+  border: 1px dashed rgba(15, 118, 110, 0.25);
+  background: rgba(153, 246, 228, 0.16);
+  color: var(--teal-700);
+  font-size: 0.86rem;
+  font-weight: 600;
+}
+
+.fee-strip {
+  margin: 8px 0;
+  padding: 8px 10px;
+  border-radius: 10px;
+  background: rgba(15, 118, 110, 0.08);
+  border: 1px solid rgba(15, 118, 110, 0.15);
+  color: var(--text);
+  font-size: 0.88rem;
+  font-weight: 600;
+}
+
+@media (max-width: 768px) {
+  .premium-hero,
+  .section-shell,
+  .premium-card {
+    border-radius: 12px;
+  }
+
+  .premium-hero {
+    padding: 16px;
+  }
+}

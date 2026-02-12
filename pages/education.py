@@ -1,236 +1,175 @@
 """
-Kansalt Education Tab - Study Abroad & University Guidance
-Top European Universities with AI-powered consultation
+Education page with searchable university list, practical filters, and WhatsApp application CTA.
 """
-import streamlit as st
-from typing import List, Dict
-import sys
+
 import os
+import urllib.parse
+from typing import Dict, List
 
-project_root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-if project_root not in sys.path:
-    sys.path.insert(0, project_root)
+import streamlit as st
 
-# =====================================================
-# MOCK UNIVERSITY DATA
-# =====================================================
-UNIVERSITIES = [
+
+WHATSAPP_NUMBER = os.getenv("WHATSAPP_NUMBER", "")
+
+UNIVERSITIES: List[Dict[str, object]] = [
     {
-        "rank": 1,
-        "name": "TU Munich (Technische Universität München)",
-        "country": "🇩🇪 Germany",
-        "city": "Munich",
-        "programs": ["Computer Science", "Engineering", "Business"],
-        "tuition": "€50-90K/year",
-        "intake": "October & April",
-        "acceptance_rate": "15%",
-        "rating": 4.8,
+        "id": 1,
+        "name": "University of Toronto",
+        "country": "Canada",
+        "budget_tier": "High",
+        "scholarship": True,
+        "fee_structure": "Tuition: CAD 45,000/year | Living: CAD 16,000/year",
+        "course_details": "Strong programs in Computer Science, Data Science, and Engineering with co-op opportunities.",
+        "link": "https://www.utoronto.ca/",
     },
     {
-        "rank": 2,
-        "name": "ETH Zurich (Swiss Federal Institute of Technology)",
-        "country": "🇨🇭 Switzerland",
-        "city": "Zurich",
-        "programs": ["Engineering", "Computer Science", "Physics"],
-        "tuition": "€100-150K/year",
-        "intake": "September",
-        "acceptance_rate": "8%",
-        "rating": 4.9,
+        "id": 2,
+        "name": "University of Melbourne",
+        "country": "Australia",
+        "budget_tier": "High",
+        "scholarship": True,
+        "fee_structure": "Tuition: AUD 44,000/year | Living: AUD 21,000/year",
+        "course_details": "Popular for Business Analytics, IT, and Health sciences with strong global rankings.",
+        "link": "https://www.unimelb.edu.au/",
     },
     {
-        "rank": 3,
-        "name": "University of Amsterdam",
-        "country": "🇳🇱 Netherlands",
-        "city": "Amsterdam",
-        "programs": ["MBA", "Computer Science", "Data Science"],
-        "tuition": "€15-25K/year",
-        "intake": "September & February",
-        "acceptance_rate": "25%",
-        "rating": 4.7,
+        "id": 3,
+        "name": "Technical University of Munich",
+        "country": "Germany",
+        "budget_tier": "Low",
+        "scholarship": True,
+        "fee_structure": "Tuition: Minimal/semester contribution | Living: EUR 12,000/year",
+        "course_details": "Well known for engineering and applied sciences; strong research and industry collaboration.",
+        "link": "https://www.tum.de/en/",
     },
     {
-        "rank": 4,
-        "name": "KTH Royal Institute of Technology",
-        "country": "🇸🇪 Sweden",
-        "city": "Stockholm",
-        "programs": ["Engineering", "Technology", "Architecture"],
-        "tuition": "€13-17K/year",
-        "intake": "September",
-        "acceptance_rate": "12%",
-        "rating": 4.6,
+        "id": 4,
+        "name": "National University of Singapore",
+        "country": "Singapore",
+        "budget_tier": "Medium",
+        "scholarship": True,
+        "fee_structure": "Tuition: SGD 30,000/year | Living: SGD 15,000/year",
+        "course_details": "Leading Asian university with strong Computer Engineering, AI, and Finance programs.",
+        "link": "https://www.nus.edu.sg/",
     },
     {
-        "rank": 5,
-        "name": "Sorbonne University (Paris)",
-        "country": "🇫🇷 France",
-        "city": "Paris",
-        "programs": ["Law", "Business", "Sciences"],
-        "tuition": "€3-8K/year",
-        "intake": "September",
-        "acceptance_rate": "30%",
-        "rating": 4.5,
+        "id": 5,
+        "name": "University of Birmingham",
+        "country": "UK",
+        "budget_tier": "Medium",
+        "scholarship": True,
+        "fee_structure": "Tuition: GBP 25,000/year | Living: GBP 11,000/year",
+        "course_details": "Offers strong postgraduate pathways in Business, Law, and life sciences.",
+        "link": "https://www.birmingham.ac.uk/",
     },
     {
-        "rank": 6,
-        "name": "University of Milan",
-        "country": "🇮🇹 Italy",
-        "city": "Milan",
-        "programs": ["Finance", "Management", "Medicine"],
-        "tuition": "€1-5K/year",
-        "intake": "September",
-        "acceptance_rate": "35%",
-        "rating": 4.4,
+        "id": 6,
+        "name": "Arizona State University",
+        "country": "USA",
+        "budget_tier": "Medium",
+        "scholarship": True,
+        "fee_structure": "Tuition: USD 34,000/year | Living: USD 14,000/year",
+        "course_details": "Career-focused degrees in technology, management, and design with industry projects.",
+        "link": "https://www.asu.edu/",
     },
 ]
 
-FIELDS_OF_STUDY = [
-    "All Fields",
-    "Computer Science",
-    "Engineering",
-    "Business & MBA",
-    "Law",
-    "Medicine",
-    "Data Science",
-    "Architecture",
-]
+COUNTRIES = ["All", "USA", "UK", "Canada", "Australia", "Germany", "Singapore"]
+BUDGET_OPTIONS = ["All", "Low", "Medium", "High"]
+SCHOLARSHIP_OPTIONS = ["All", "Yes", "No"]
 
-COUNTRIES = ["All", "Germany", "Netherlands", "France", "Sweden", "Italy", "Switzerland"]
 
-DEGREE_TYPES = ["All", "Bachelor", "Master", "PhD"]
+def _wa_link(message: str) -> str:
+    digits = "".join(ch for ch in WHATSAPP_NUMBER if ch.isdigit())
+    if not digits:
+        return ""
+    return f"https://wa.me/{digits}?text={urllib.parse.quote(message)}"
 
-# =====================================================
-# SESSION STATE
-# =====================================================
-if "edu_page" not in st.session_state:
-    st.session_state.edu_page = 1
 
-def render():
-    """Main render function for Education tab."""
-    
-    # Header
-    st.markdown("<h1>🎓 Study Abroad</h1>", unsafe_allow_html=True)
-    st.markdown("<p>Find top European universities. Expert guidance at every step.</p>", unsafe_allow_html=True)
-    
-    st.markdown("<br>", unsafe_allow_html=True)
-    
-    # =====================================================
-    # SIDEBAR FILTERS
-    # =====================================================
-    with st.sidebar:
-        st.markdown("#### Filters")
-        
-        country_filter = st.multiselect(
-            "Country",
-            COUNTRIES,
-            default=["All"],
-            key="edu_country",
-        )
-        
-        sort_by = st.selectbox(
-            "Sort by",
-            ["Ranking", "Affordability", "Rating"],
-            key="edu_sort",
-        )
-    
-    # =====================================================
-    # FILTER LOGIC
-    # =====================================================
-    filtered_unis = UNIVERSITIES.copy()
-    
-    if "All" not in country_filter:
-        filtered_unis = [u for u in filtered_unis if any(c in u["country"] for c in country_filter)]
-    
-    if sort_by == "Affordability":
-        def get_tuition_value(uni):
-            tuition_str = uni["tuition"].split("-")[0].replace("€", "").replace("K", "").strip()
-            try:
-                return float(tuition_str)
-            except:
-                return 1000
-        filtered_unis.sort(key=get_tuition_value)
-    elif sort_by == "Rating":
-        filtered_unis.sort(key=lambda x: x["rating"], reverse=True)
-    
-    # =====================================================
-    # RESULTS DISPLAY
-    # =====================================================
-    st.markdown(f"#### {len(filtered_unis)} Universities")
-    st.markdown("")
-    
-    for uni in filtered_unis:
-        # Clean card layout
-        st.markdown(f"""
-        <div style='border: 1px solid #E2E8F0; border-radius: 12px; padding: 1.5rem; margin-bottom: 1rem; background: #FFFFFF;'>
-            <div style='display: flex; justify-content: space-between; align-items: start; margin-bottom: 1rem;'>
-                <div>
-                    <h4 style='color: #0F172A; margin: 0; font-size: 1.1rem;'>{uni["name"]}</h4>
-                    <p style='color: #475569; margin: 0.25rem 0 0 0; font-size: 0.9rem;'>{uni["country"]} • {uni["city"]}</p>
-                </div>
-                <div style='text-align: right;'>
-                    <div style='font-size: 1.5rem; font-weight: 700; color: #2563EB;'>#{uni["rank"]}</div>
-                    <div style='font-size: 0.75rem; color: #64748B;'>Ranking</div>
-                </div>
-            </div>
-            
-            <div style='display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; margin: 1rem 0; padding: 1rem 0; border-top: 1px solid #E2E8F0; border-bottom: 1px solid #E2E8F0;'>
-                <div>
-                    <p style='color: #64748B; font-size: 0.75rem; margin: 0; text-transform: uppercase; font-weight: 500;'>Tuition</p>
-                    <p style='color: #0F172A; font-size: 0.95rem; margin: 0.5rem 0 0 0; font-weight: 500;'>{uni["tuition"]}</p>
-                </div>
-                <div>
-                    <p style='color: #64748B; font-size: 0.75rem; margin: 0; text-transform: uppercase; font-weight: 500;'>Rating</p>
-                    <p style='color: #0F172A; font-size: 0.95rem; margin: 0.5rem 0 0 0; font-weight: 500;'>⭐ {uni["rating"]}</p>
-                </div>
-                <div>
-                    <p style='color: #64748B; font-size: 0.75rem; margin: 0; text-transform: uppercase; font-weight: 500;'>Acceptance</p>
-                    <p style='color: #0F172A; font-size: 0.95rem; margin: 0.5rem 0 0 0; font-weight: 500;'>{uni["acceptance_rate"]}</p>
-                </div>
-            </div>
-            
-            <div style='margin: 1rem 0;'>
-                <p style='color: #64748B; font-size: 0.75rem; margin: 0 0 0.5rem 0; text-transform: uppercase; font-weight: 500;'>Programs</p>
-                <div style='display: flex; gap: 0.5rem; flex-wrap: wrap;'>
-        """, unsafe_allow_html=True)
-        
-        for prog in uni["programs"]:
-            st.markdown(f"<span style='display: inline-block; padding: 6px 12px; background: #F5F9FF; color: #2563EB; border-radius: 6px; font-size: 0.85rem; font-weight: 500;'>{prog}</span>", unsafe_allow_html=True)
-        
-        st.markdown("""
-                </div>
-            </div>
-        </div>
-        """, unsafe_allow_html=True)
-        
-        col1, col2 = st.columns([3, 1])
-        with col2:
-            if st.button("Get Info", use_container_width=True, key=f"uni_consult_{uni['name']}"):
-                st.session_state.selected_uni = uni["name"]
-                st.rerun()
-        st.markdown("")
-    
-    # =====================================================
-    # CONSULTATION FORM
-    # =====================================================
-    if "selected_uni" in st.session_state and st.session_state.selected_uni:
-        st.markdown("---")
-        st.markdown(f"#### 🎓 Free Consultation")
-        st.markdown(f"Get personalized guidance for **{st.session_state.selected_uni}**")
-        st.markdown("")
-        
-        col1, col2 = st.columns(2)
-        with col1:
-            name = st.text_input("Your name", key="consult_name")
-        with col2:
-            email = st.text_input("Email", key="consult_email")
-        
-        interest = st.text_area("Your interests & goals", key="consult_interest", height=80, placeholder="Tell us about yourself...")
-        
-        if st.button("Send Request", use_container_width=True, type="primary"):
-            st.success("✅ Thank you! We'll contact you within 24 hours.")
-            st.session_state.selected_uni = None
-            st.rerun()
-        
-        st.markdown("")
+def _apply_filters(universities: List[Dict[str, object]], search: str, country: str, budget: str, scholarship: str) -> List[Dict[str, object]]:
+    filtered = universities[:]
 
-if __name__ == "__main__":
-    render()
+    s = search.strip().lower()
+    if s:
+        filtered = [
+            u for u in filtered
+            if s in str(u.get("name", "")).lower() or s in str(u.get("course_details", "")).lower()
+        ]
+
+    if country != "All":
+        filtered = [u for u in filtered if u.get("country") == country]
+
+    if budget != "All":
+        filtered = [u for u in filtered if u.get("budget_tier") == budget]
+
+    if scholarship == "Yes":
+        filtered = [u for u in filtered if bool(u.get("scholarship"))]
+    elif scholarship == "No":
+        filtered = [u for u in filtered if not bool(u.get("scholarship"))]
+
+    return filtered
+
+
+def render() -> None:
+    st.markdown('<section class="premium-hero">', unsafe_allow_html=True)
+    st.markdown('<div class="hero-kicker">Education</div>', unsafe_allow_html=True)
+    st.markdown('<h1 class="hero-title">Study Abroad Search</h1>', unsafe_allow_html=True)
+    st.markdown('<p class="hero-sub">Search by budget, destination country, and scholarship availability.</p>', unsafe_allow_html=True)
+    st.markdown('</section>', unsafe_allow_html=True)
+
+    st.markdown('<div class="section-shell">', unsafe_allow_html=True)
+    st.markdown('<div class="search-panel">', unsafe_allow_html=True)
+
+    f1, f2, f3, f4 = st.columns([1.7, 1.1, 1.1, 1.1])
+
+    with f1:
+        search = st.text_input("Search colleges/universities", placeholder="Search by university or course", label_visibility="collapsed")
+
+    with f2:
+        country = st.selectbox("Country", options=COUNTRIES, label_visibility="collapsed")
+
+    with f3:
+        budget = st.selectbox("Budget", options=BUDGET_OPTIONS, label_visibility="collapsed")
+
+    with f4:
+        scholarship = st.selectbox("Scholarship", options=SCHOLARSHIP_OPTIONS, label_visibility="collapsed")
+
+    st.markdown('</div>', unsafe_allow_html=True)
+
+    results = _apply_filters(UNIVERSITIES, search, country, budget, scholarship)
+
+    st.markdown(f'<div class="section-subtitle"><strong>{len(results)}</strong> result(s) found</div>', unsafe_allow_html=True)
+
+    if not results:
+        st.info("No universities found for the selected filters.")
+        st.markdown('</div>', unsafe_allow_html=True)
+        return
+
+    for uni in results:
+        st.markdown('<article class="premium-card education-card">', unsafe_allow_html=True)
+        st.markdown(f'<h3 class="result-title">{uni["name"]}</h3>', unsafe_allow_html=True)
+        st.markdown(f'<div class="result-meta"><span>{uni["country"]}</span><span>Budget: {uni["budget_tier"]}</span><span>Scholarship: {"Yes" if uni["scholarship"] else "No"}</span></div>', unsafe_allow_html=True)
+        st.markdown(f'<div class="fee-strip">{uni["fee_structure"]}</div>', unsafe_allow_html=True)
+        st.markdown(f'<p class="result-description">{uni["course_details"]}</p>', unsafe_allow_html=True)
+
+        c1, c2 = st.columns([1, 1])
+        with c1:
+            st.link_button("University Website", str(uni["link"]), use_container_width=True)
+
+        with c2:
+            msg = (
+                f"Hello Kunsalt, I want to apply for {uni['name']} in {uni['country']}. "
+                f"Please guide me with admission steps and document checklist."
+            )
+            wa_url = _wa_link(msg)
+            if wa_url:
+                st.link_button("Submit Application", wa_url, use_container_width=True)
+            else:
+                st.button("Submit Application", disabled=True, use_container_width=True, key=f"apply_disabled_{uni['id']}")
+
+        st.markdown('</article>', unsafe_allow_html=True)
+
+    if not WHATSAPP_NUMBER:
+        st.caption("Set WHATSAPP_NUMBER environment variable to enable Submit Application on WhatsApp.")
+
+    st.markdown('</div>', unsafe_allow_html=True)
