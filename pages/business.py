@@ -1,10 +1,14 @@
 """
-Business page - category + status driven tech solution advisory.
+Business page - overview advisory + app store + admin workflows.
 """
 
 import urllib.parse
 
 import streamlit as st
+
+from pages.business_admin import is_admin_authenticated, render_admin_access, render_admin_panel
+from pages.business_appstore import render as render_app_store
+from services.appstore_service import AppStoreService
 
 
 WHATSAPP_NUMBER = "+91-8555052189"
@@ -81,7 +85,12 @@ def _wa_link(message: str) -> str:
     return f"https://wa.me/{digits}?text={urllib.parse.quote(message)}"
 
 
-def render() -> None:
+@st.cache_resource
+def _get_appstore_service() -> AppStoreService:
+    return AppStoreService()
+
+
+def _render_overview() -> None:
     st.markdown(
         """
         <section class="premium-hero">
@@ -134,7 +143,7 @@ def render() -> None:
         )
 
     msg = (
-        f"Hello Kunsalt, my business category is {selected_category}. "
+        f"Hello Kansalt, my business category is {selected_category}. "
         f"Current status: {selected_status} Please share a tech solution plan."
     )
     wa = _wa_link(msg)
@@ -149,3 +158,24 @@ def render() -> None:
             st.button("Get Solution Plan on WhatsApp", disabled=True, use_container_width=True)
 
     st.markdown('</div>', unsafe_allow_html=True)
+
+
+def render() -> None:
+    service = _get_appstore_service()
+
+    tab_names = ["Overview", "App Store"]
+    if is_admin_authenticated():
+        tab_names.append("Admin")
+
+    tabs = st.tabs(tab_names)
+    with tabs[0]:
+        _render_overview()
+    with tabs[1]:
+        render_app_store(service)
+
+    if is_admin_authenticated() and len(tabs) > 2:
+        with tabs[2]:
+            render_admin_panel(service)
+    else:
+        render_admin_access(service)
+
