@@ -1,1 +1,2 @@
-"""Pages module for Kunsalt dashboard"""
+"""Pages module for Kansalt dashboard"""
+

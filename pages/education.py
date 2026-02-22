@@ -365,7 +365,7 @@ def render() -> None:
 
         with c2:
             msg = (
-                f"Hello Kunsalt, I want to apply for {uni['name']} ({uni['country']}). "
+                f"Hello Kansalt, I want to apply for {uni['name']} ({uni['country']}). "
                 "Please share admission process, required documents, and next steps."
             )
             wa_url = _wa_link(msg)
@@ -397,3 +397,4 @@ def render() -> None:
         if int(new_page) != int(st.session_state.edu_page):
             st.session_state.edu_page = int(new_page)
             st.rerun()
+

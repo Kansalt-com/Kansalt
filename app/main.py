@@ -66,7 +66,7 @@ from pages.business import render as render_business
 # =====================================================
 st.set_page_config(
     layout="wide",
-    page_title="Kunsalt - Jobs Dashboard",
+    page_title="Kansalt - Jobs Dashboard",
     page_icon="💼",
     initial_sidebar_state="expanded",
 )
@@ -120,7 +120,7 @@ st.markdown('<div class="navbar-container">', unsafe_allow_html=True)
 navbar_col1, navbar_col2, navbar_col3 = st.columns([1, 2, 1])
 
 with navbar_col1:
-    st.markdown('<div class="navbar-brand">💼 kunsalt</div>', unsafe_allow_html=True)
+    st.markdown('<div class="navbar-brand">💼 Kansalt</div>', unsafe_allow_html=True)
 
 with navbar_col2:
     col_home, col_ed, col_jobs, col_bus = st.columns([1, 1, 1, 1])
@@ -164,3 +164,4 @@ elif st.session_state.selected_tab == "Business":
     render_business()
 else:
     render_jobs()
+

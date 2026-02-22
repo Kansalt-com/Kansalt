@@ -8,7 +8,7 @@ import streamlit as st
 def render():
     """Dashboard Home page - module overview only"""
     
-    st.markdown("# Welcome to Kunsalt")
+    st.markdown("# Welcome to Kansalt")
     st.markdown("Find universities, discover jobs, or connect with businesses.")
     st.markdown("")
     
@@ -78,3 +78,4 @@ def render():
                 <div style="font-size: 0.9rem; color: var(--text-secondary);">{label}</div>
             </div>
             """, unsafe_allow_html=True)
+

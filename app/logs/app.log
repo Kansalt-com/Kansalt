@@ -3117,3 +3117,11 @@
 2026-02-12 15:00:11,150 | scrapers.rss_common | WARNING | RSS feed parsing warning for Education Jobs: <urlopen error [WinError 10060] A connection attempt failed because the connected party did not properly respond after a period of time, or established connection failed because connected host has failed to respond>
 2026-02-12 15:00:11,150 | scrapers.rss_common | INFO | RSS Education Jobs: fetched 0 jobs
 2026-02-12 15:00:11,150 | services.job_fetcher | DEBUG | Source EducationJobs returned 0 items in 42.19s
+2026-02-12 15:35:23,961 | scrapers.rss_common | ERROR | RSS feed error for FlexJobs: Remote end closed connection without response
+2026-02-12 15:35:23,997 | services.job_fetcher | DEBUG | Source FlexJobs returned 0 items in 6635.46s
+2026-02-12 15:35:23,973 | scrapers.rss_common | ERROR | RSS feed error for FlexJobs: Remote end closed connection without response
+2026-02-12 15:35:24,205 | scrapers.rss_common | ERROR | RSS feed error for FlexJobs: Remote end closed connection without response
+2026-02-12 15:35:24,236 | utils.cache | DEBUG | Cache SET for key: jobs_8803484753234291780_-1147542605067599598_all_0 (TTL: 20m)
+2026-02-12 15:35:24,238 | services.job_fetcher | INFO | Top slow sources (name,sec,count): [('EducationJobs', 42.20514440536499, 0), ('RubyOnRails', 19.39216685295105, 0), ('JobsCollider', 11.242526531219482, 0), ('ArbeitNow', 4.251583576202393, 0), ('ContentJobs', 3.620149612426758, 0), ('SecurityJobs', 3.5214474201202393, 1), ('WeworkRemotely', 2.839168071746826, 0), ('RemotiveRSS', 2.7985713481903076, 24), ('RemotiveAPI', 2.3745205402374268, 1), ('StackOverflow', 2.333521604537964, 0), ('Himalayas', 2.1687402725219727, 0), ('RemoteCA', 2.146737813949585, 0)]
+2026-02-12 15:35:24,240 | services.job_fetcher | INFO | Final results: 23 jobs from 35 sources
+2026-02-12 15:35:23,973 | scrapers.rss_common | ERROR | RSS feed error for FlexJobs: Remote end closed connection without response
