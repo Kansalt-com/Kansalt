@@ -1,15 +1,12 @@
-"""
-Business App Store user interface.
-"""
-
 from __future__ import annotations
 
 import html
 from datetime import datetime
-from typing import Any, Dict
+from typing import Any, Dict, List
 
 import streamlit as st
 
+from pages.ui_kit import empty_state, render_hero
 from services.appstore_service import AppStoreService
 
 
@@ -47,94 +44,84 @@ def _format_iso(iso_text: str) -> str:
         return str(iso_text)
 
 
-def _render_tags(tags: list[str]) -> None:
+def _render_tags(tags: List[str]) -> str:
     if not tags:
-        return
-    chips = "".join(f'<span class="badge">{html.escape(tag)}</span>' for tag in tags)
-    st.markdown(f'<div class="result-tags">{chips}</div>', unsafe_allow_html=True)
+        return ""
+    return "".join(f'<span class="k-badge">{html.escape(tag)}</span>' for tag in tags)
 
 
-def _render_download_button(service: AppStoreService, app: Dict[str, Any], key_prefix: str) -> None:
+def _render_install_button(service: AppStoreService, app: Dict[str, Any], key_prefix: str) -> None:
     payload = service.get_zip_bytes(int(app["id"]))
     if payload:
         st.download_button(
-            "Download ZIP",
+            "Install",
             data=payload,
             file_name=service.get_download_filename(app),
             mime="application/zip",
-            key=f"{key_prefix}_dl_{app['id']}",
+            key=f"{key_prefix}_install_{app['id']}",
             use_container_width=True,
             on_click=service.increment_downloads,
             args=(int(app["id"]),),
         )
     else:
         st.button(
-            "Download ZIP",
+            "Install",
             disabled=True,
-            key=f"{key_prefix}_dl_disabled_{app['id']}",
+            key=f"{key_prefix}_install_disabled_{app['id']}",
             use_container_width=True,
         )
 
 
 def _render_detail_view(service: AppStoreService, app: Dict[str, Any]) -> None:
-    top_left, top_right = st.columns([1, 1])
-    with top_left:
-        if st.button("Back to App Store", key="appstore_back_to_list", use_container_width=True):
+    c1, c2 = st.columns([1, 1])
+    with c1:
+        if st.button("Back to App Store", key="appstore_back_btn", use_container_width=True):
             st.session_state[STATE_SELECTED_SLUG] = None
             st.rerun()
-    with top_right:
-        _render_download_button(service, app, "appstore_detail")
+    with c2:
+        _render_install_button(service, app, "detail")
 
     st.markdown(
         f"""
-        <article class="premium-card">
-            <h2 class="result-title">{html.escape(str(app.get("name", "")))}</h2>
-            <div class="result-meta">
-                <span>Category: {html.escape(str(app.get("category", "Other")))}</span>
-                <span>Version: {html.escape(str(app.get("version", "-")))}</span>
-                <span>Last updated: {html.escape(_format_iso(str(app.get("updated_at", ""))))}</span>
-                <span>Downloads: {int(app.get("downloads", 0))}</span>
+        <article class="k-app-card reveal">
+            <h2 class="k-app-title">{html.escape(str(app.get('name', 'Untitled App')))}</h2>
+            <div class="k-uni-meta">
+                <span>Category: {html.escape(str(app.get('category', 'Other')))}</span>
+                <span>Version: {html.escape(str(app.get('version', '-')))}</span>
+                <span>Updated: {html.escape(_format_iso(str(app.get('updated_at', ''))))}</span>
+                <span>Downloads: {int(app.get('downloads', 0) or 0)}</span>
             </div>
+            <p class="k-course">{html.escape(str(app.get('full_desc') or app.get('short_desc') or 'No detailed description available.'))}</p>
+            <div class="k-badge-row">{_render_tags(list(app.get('tags', [])))}</div>
         </article>
         """,
         unsafe_allow_html=True,
     )
 
-    _render_tags(app.get("tags", []))
-
-    full_desc = str(app.get("full_desc") or app.get("short_desc") or "No detailed description available.")
-    setup_instructions = str(app.get("setup_instructions") or "No setup instructions provided yet.")
-    changelog = str(app.get("changelog") or "No changelog available yet.")
-
-    st.markdown("### Description")
-    st.write(full_desc)
-
-    st.markdown("### Setup / Run Instructions")
-    st.code(setup_instructions, language="text")
+    st.markdown("### Setup and Run")
+    st.code(str(app.get("setup_instructions") or "No setup instructions provided."), language="text")
 
     st.markdown("### Changelog")
-    st.code(changelog, language="text")
+    st.code(str(app.get("changelog") or "No changelog provided."), language="text")
 
 
 def render(service: AppStoreService) -> None:
     _init_state()
 
-    st.markdown(
-        """
-        <section class="premium-hero">
-            <div class="hero-kicker">Business</div>
-            <h1 class="hero-title">App Store</h1>
-            <p class="hero-sub">Browse business apps, check details, and download ZIP packages instantly.</p>
-        </section>
-        """,
-        unsafe_allow_html=True,
+    render_hero(
+        kicker="Business App Store",
+        title="Install and launch business-ready applications from a clean app-store experience.",
+        subtitle=(
+            "Browse by category and tags, review descriptions, and download deployable packages. "
+            "Admin users can continuously onboard new apps from ZIP uploads or local project folders."
+        ),
     )
 
     selected_slug = st.session_state.get(STATE_SELECTED_SLUG)
     if selected_slug:
         app = service.get_app_by_slug(str(selected_slug), include_inactive=False)
         if not app:
-            st.info("This app is no longer available in the store.")
+            st.info("This app is currently unavailable.")
             st.session_state[STATE_SELECTED_SLUG] = None
         else:
             _render_detail_view(service, app)
@@ -143,12 +130,14 @@ def render(service: AppStoreService) -> None:
     categories = ["All"] + service.get_categories(active_only=True)
     tags_available = service.get_all_tags(active_only=True)
 
-    st.markdown('<div class="section-shell">', unsafe_allow_html=True)
+    st.markdown('<section class="k-section reveal">', unsafe_allow_html=True)
+    st.markdown('<div class="k-filter-head">App Catalog Filters</div>', unsafe_allow_html=True)
+
     f1, f2, f3 = st.columns([1.8, 1.0, 1.4])
     with f1:
         st.text_input(
             "Search",
-            placeholder="Search by app name or keywords",
+            placeholder="Search app name or keyword",
             key=STATE_SEARCH,
             label_visibility="collapsed",
         )
@@ -167,12 +156,13 @@ def render(service: AppStoreService) -> None:
             placeholder="Filter by tags",
             label_visibility="collapsed",
         )
-    st.markdown('</div>', unsafe_allow_html=True)
+
+    st.markdown('</section>', unsafe_allow_html=True)
 
     signature = (
         str(st.session_state.get(STATE_SEARCH, "")).strip().lower(),
         str(st.session_state.get(STATE_CATEGORY, "All")),
-        tuple(sorted([str(tag) for tag in st.session_state.get(STATE_TAGS, [])])),
+        tuple(sorted(str(tag) for tag in st.session_state.get(STATE_TAGS, []))),
     )
     if st.session_state.get(STATE_SIGNATURE) != signature:
         st.session_state[STATE_PAGE] = 1
@@ -193,84 +183,86 @@ def render(service: AppStoreService) -> None:
     total_pages = int(page_data["total_pages"])
 
     st.markdown(
-        f'<div class="section-subtitle"><strong>{total}</strong> app(s) found</div>',
+        f'<div class="k-result-count reveal"><strong>{total}</strong> apps available.</div>',
         unsafe_allow_html=True,
     )
 
     if not apps:
-        st.info("No apps match your current filters.")
+        empty_state("No apps found", "Try clearing filters or searching with a broader keyword.")
         return
 
-    cols = st.columns(3, gap="large")
-    for idx, app in enumerate(apps):
-        with cols[idx % 3]:
-            name = html.escape(str(app.get("name", "Untitled App")))
-            category = html.escape(str(app.get("category", "Other")))
-            version = html.escape(str(app.get("version", "-")))
-            updated = html.escape(_format_iso(str(app.get("updated_at", ""))))
-            downloads = int(app.get("downloads", 0))
-            short_desc = str(app.get("short_desc") or "").strip() or "No short description available."
-            if len(short_desc) > 180:
-                short_desc = short_desc[:180].rstrip() + "..."
+    st.markdown('<div class="k-app-grid">', unsafe_allow_html=True)
+    for app in apps:
+        name = html.escape(str(app.get("name", "Untitled App")))
+        category = html.escape(str(app.get("category", "Other")))
+        version = html.escape(str(app.get("version", "-")))
+        updated = html.escape(_format_iso(str(app.get("updated_at", ""))))
+        downloads = int(app.get("downloads", 0) or 0)
 
-            st.markdown(
-                f"""
-                <article class="premium-card compact-card">
-                    <h3 class="result-title">{name}</h3>
-                    <div class="result-meta">
-                        <span>{category}</span>
-                        <span>Version: {version}</span>
-                        <span>Updated: {updated}</span>
-                    </div>
-                    <p class="result-description">{html.escape(short_desc)}</p>
-                    <div class="section-subtitle" style="margin:0 0 6px 0;">Downloads: {downloads}</div>
-                </article>
-                """,
-                unsafe_allow_html=True,
-            )
-            _render_tags(app.get("tags", []))
+        short_desc = str(app.get("short_desc") or "No description available.").strip()
+        if len(short_desc) > 180:
+            short_desc = short_desc[:180].rstrip() + "..."
 
-            c1, c2 = st.columns(2)
-            with c1:
-                if st.button("View Details", key=f"appstore_view_{app['id']}", use_container_width=True):
-                    st.session_state[STATE_SELECTED_SLUG] = app.get("slug")
-                    st.rerun()
-            with c2:
-                _render_download_button(service, app, f"appstore_card_{app['id']}")
+        st.markdown(
+            f"""
+            <article class="k-app-card reveal" id="app_{app['id']}">
+                <h3 class="k-app-title">{name}</h3>
+                <div class="k-uni-meta">
+                    <span>{category}</span>
+                    <span>v{version}</span>
+                    <span>Updated: {updated}</span>
+                </div>
+                <p class="k-course">{html.escape(short_desc)}</p>
+                <div class="k-subtle">Downloads: {downloads}</div>
+                <div class="k-badge-row">{_render_tags(list(app.get('tags', [])))}</div>
+            </article>
+            """,
+            unsafe_allow_html=True,
+        )
 
-    nav1, nav2, nav3, nav4 = st.columns([1, 1, 1.4, 1.2])
-    with nav1:
+        a1, a2 = st.columns(2)
+        with a1:
+            if st.button("Launch", key=f"launch_{app['id']}", use_container_width=True):
+                st.session_state[STATE_SELECTED_SLUG] = app.get("slug")
+                st.rerun()
+        with a2:
+            _render_install_button(service, app, f"card_{app['id']}")
+
+    st.markdown('</div>', unsafe_allow_html=True)
+
+    n1, n2, n3, n4 = st.columns([1, 1, 1.2, 1.4])
+    with n1:
         if st.button(
             "Previous",
+            key="app_prev",
             use_container_width=True,
             disabled=int(st.session_state[STATE_PAGE]) <= 1,
-            key="appstore_prev_page",
         ):
             st.session_state[STATE_PAGE] = max(1, int(st.session_state[STATE_PAGE]) - 1)
             st.rerun()
-    with nav2:
+    with n2:
         if st.button(
             "Next",
+            key="app_next",
             use_container_width=True,
             disabled=int(st.session_state[STATE_PAGE]) >= total_pages,
-            key="appstore_next_page",
         ):
             st.session_state[STATE_PAGE] = min(total_pages, int(st.session_state[STATE_PAGE]) + 1)
             st.rerun()
-    with nav3:
+    with n3:
         st.markdown(
-            f'<div class="section-subtitle" style="text-align:center;margin-top:8px;">Page {int(st.session_state[STATE_PAGE])} of {total_pages}</div>',
+            f'<div class="k-subtle" style="text-align:center;padding-top:0.55rem;">Page {int(st.session_state[STATE_PAGE])} of {total_pages}</div>',
             unsafe_allow_html=True,
         )
-    with nav4:
-        new_page = st.number_input(
+    with n4:
+        jump = st.number_input(
             "Go to page",
             min_value=1,
             max_value=total_pages,
             value=int(st.session_state[STATE_PAGE]),
             step=1,
-            key="appstore_page_input",
+            key="app_jump",
         )
-        if int(new_page) != int(st.session_state[STATE_PAGE]):
-            st.session_state[STATE_PAGE] = int(new_page)
+        if int(jump) != int(st.session_state[STATE_PAGE]):
+            st.session_state[STATE_PAGE] = int(jump)
             st.rerun()

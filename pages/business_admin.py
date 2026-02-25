@@ -1,13 +1,10 @@
-"""
-Business App Store admin authentication and management UI.
-"""
-
 from __future__ import annotations
 
 from typing import Any, Dict, List
 
 import streamlit as st
 
+from pages.ui_kit import render_hero
 from services.appstore_service import AppStoreService, DEFAULT_CATEGORIES
 
 
@@ -29,37 +26,38 @@ def _clear_admin_session() -> None:
     st.session_state[SESSION_ADMIN_USER] = None
 
 
+def _parse_csv(raw: str) -> List[str]:
+    return [part.strip() for part in raw.split(",") if part.strip()]
+
+
 def render_admin_access(service: AppStoreService) -> None:
-    """
-    Render admin initialize/login/logout controls outside admin panel.
-    This lets admin users authenticate even when Admin tab is hidden.
-    """
     has_admin = service.has_admin_users()
+
     with st.expander("Admin Access", expanded=not has_admin):
-        st.markdown('<div class="section-shell">', unsafe_allow_html=True)
-        st.markdown('<div class="section-title">Admin Access</div>', unsafe_allow_html=True)
+        st.markdown('<section class="k-section reveal">', unsafe_allow_html=True)
+        st.markdown('<div class="k-filter-head">Admin Authentication</div>', unsafe_allow_html=True)
 
         if is_admin_authenticated():
-            user = str(st.session_state.get(SESSION_ADMIN_USER, "admin"))
+            username = str(st.session_state.get(SESSION_ADMIN_USER, "admin"))
             c1, c2 = st.columns([3, 1])
             with c1:
                 st.markdown(
-                    f'<div class="section-subtitle">Signed in as <strong>{user}</strong>.</div>',
+                    f'<div class="k-subtle">Signed in as <strong>{username}</strong>.</div>',
                     unsafe_allow_html=True,
                 )
             with c2:
-                if st.button("Logout", use_container_width=True, key="business_admin_logout_access"):
+                if st.button("Logout", use_container_width=True, key="admin_access_logout"):
                     _clear_admin_session()
                     st.rerun()
-            st.markdown('</div>', unsafe_allow_html=True)
+            st.markdown('</section>', unsafe_allow_html=True)
             return
 
         if not has_admin:
             st.markdown(
-                '<div class="section-subtitle">No admin account exists yet. Initialize the first admin.</div>',
+                '<div class="k-admin-note">No admin account exists. Initialize the first admin to enable app publishing and package management.</div>',
                 unsafe_allow_html=True,
             )
-            with st.form("business_admin_init_form", clear_on_submit=True):
+            with st.form("admin_init_form", clear_on_submit=True):
                 username = st.text_input("Admin username", placeholder="Choose admin username")
                 password = st.text_input("Admin password", type="password", placeholder="At least 8 characters")
                 confirm = st.text_input("Confirm password", type="password")
@@ -69,19 +67,19 @@ def render_admin_access(service: AppStoreService) -> None:
                 if password != confirm:
                     st.error("Passwords do not match.")
                 else:
-                    ok, msg = service.create_initial_admin(username=username, password=password)
+                    ok, message = service.create_initial_admin(username=username, password=password)
                     if ok:
                         _set_admin_session(username.strip())
-                        st.success(msg)
+                        st.success(message)
                         st.rerun()
                     else:
-                        st.error(msg)
+                        st.error(message)
         else:
             st.markdown(
-                '<div class="section-subtitle">Sign in to access App Store administration.</div>',
+                '<div class="k-subtle">Sign in to access App Store administration.</div>',
                 unsafe_allow_html=True,
             )
-            with st.form("business_admin_login_form", clear_on_submit=True):
+            with st.form("admin_login_form", clear_on_submit=True):
                 username = st.text_input("Admin username", placeholder="Enter username")
                 password = st.text_input("Admin password", type="password", placeholder="Enter password")
                 submitted = st.form_submit_button("Login", use_container_width=True)
@@ -94,15 +92,11 @@ def render_admin_access(service: AppStoreService) -> None:
                 else:
                     st.error("Invalid admin credentials.")
 
-        st.markdown('</div>', unsafe_allow_html=True)
-
-
-def _parse_csv(raw: str) -> List[str]:
-    return [part.strip() for part in raw.split(",") if part.strip()]
+        st.markdown('</section>', unsafe_allow_html=True)
 
 
 def _render_add_app_panel(service: AppStoreService) -> None:
-    st.markdown("### Add New App")
+    st.markdown('<div class="k-admin-note">You can onboard new apps dynamically from ZIP files or by pointing to a local project folder path.</div>', unsafe_allow_html=True)
 
     with st.form("business_admin_add_app_form", clear_on_submit=False):
         c1, c2, c3 = st.columns([1.5, 1.0, 0.8])
@@ -135,15 +129,14 @@ def _render_add_app_panel(service: AppStoreService) -> None:
             options=["Upload ZIP", "Add Local Folder Path"],
             horizontal=True,
         )
+
         uploaded_zip = None
         folder_path = ""
+
         if source_mode == "Upload ZIP":
             uploaded_zip = st.file_uploader("Upload ZIP", type=["zip"], accept_multiple_files=False)
         else:
-            folder_path = st.text_input(
-                "Local Project Folder Path",
-                placeholder=r"Example: D:\projects\my_app",
-            )
+            folder_path = st.text_input("Local Project Folder Path", placeholder=r"Example: D:\projects\my_app")
 
         submitted = st.form_submit_button("Add / Update App", use_container_width=True)
 
@@ -167,7 +160,7 @@ def _render_add_app_panel(service: AppStoreService) -> None:
         if uploaded_zip is None:
             st.error("Please upload a ZIP file.")
             return
-        ok, msg, _ = service.add_or_update_app_from_uploaded_zip(
+        ok, message, _ = service.add_or_update_app_from_uploaded_zip(
             metadata=metadata,
             zip_bytes=uploaded_zip.getvalue(),
         )
@@ -175,54 +168,54 @@ def _render_add_app_panel(service: AppStoreService) -> None:
         if not folder_path.strip():
             st.error("Please provide a local folder path.")
             return
-        ok, msg, _ = service.add_or_update_app_from_folder(
+        ok, message, _ = service.add_or_update_app_from_folder(
             metadata=metadata,
             folder_path=folder_path,
         )
 
     if ok:
-        st.success(msg)
+        st.success(message)
         st.rerun()
     else:
-        st.error(msg)
+        st.error(message)
 
 
 def _render_manage_apps_panel(service: AppStoreService) -> None:
-    st.markdown("### Manage Apps")
     apps = service.list_admin_apps()
     if not apps:
         st.info("No apps available yet.")
         return
 
     app_by_id = {int(app["id"]): app for app in apps}
-    app_ids = list(app_by_id.keys())
-
     selected_id = st.selectbox(
         "Select app",
-        options=app_ids,
+        options=list(app_by_id.keys()),
         format_func=lambda app_id: (
-            f"{app_by_id[app_id]['name']} "
-            f"(v{app_by_id[app_id]['version']}) - "
+            f"{app_by_id[app_id]['name']} (v{app_by_id[app_id]['version']}) - "
             f"{'Active' if app_by_id[app_id]['is_active'] else 'Disabled'}"
         ),
         key="business_admin_selected_app",
     )
+
     app = app_by_id[int(selected_id)]
     app_id = int(app["id"])
 
     st.markdown(
-        f'<div class="section-subtitle">Downloads: <strong>{int(app.get("downloads", 0))}</strong></div>',
+        f'<div class="k-subtle">Downloads: <strong>{int(app.get("downloads", 0))}</strong></div>',
         unsafe_allow_html=True,
     )
 
     name = st.text_input("Name", value=str(app.get("name", "")), key=f"admin_name_{app_id}")
+    current_category = str(app.get("category", "Other"))
+    category_index = DEFAULT_CATEGORIES.index(current_category) if current_category in DEFAULT_CATEGORIES else 0
     category = st.selectbox(
         "Category",
         options=DEFAULT_CATEGORIES,
-        index=max(0, DEFAULT_CATEGORIES.index(app.get("category", "Other")) if app.get("category", "Other") in DEFAULT_CATEGORIES else 0),
+        index=category_index,
         key=f"admin_category_{app_id}",
     )
     version = st.text_input("Version", value=str(app.get("version", "1.0.0")), key=f"admin_version_{app_id}")
+
     short_desc = st.text_area(
         "Short Description",
         value=str(app.get("short_desc", "")),
@@ -246,6 +239,7 @@ def _render_manage_apps_panel(service: AppStoreService) -> None:
         default=app.get("os_support", []),
         key=f"admin_os_{app_id}",
     )
+
     setup_instructions = st.text_area(
         "Setup / Run Instructions",
         value=str(app.get("setup_instructions", "")),
@@ -258,7 +252,7 @@ def _render_manage_apps_panel(service: AppStoreService) -> None:
         height=90,
         key=f"admin_changelog_{app_id}",
     )
-    active_flag = st.checkbox(
+    visible_flag = st.checkbox(
         "Visible in App Store",
         value=bool(app.get("is_active", True)),
         key=f"admin_visible_{app_id}",
@@ -275,50 +269,51 @@ def _render_manage_apps_panel(service: AppStoreService) -> None:
             "os_support": os_support,
             "setup_instructions": setup_instructions,
             "changelog": changelog,
-            "is_active": active_flag,
+            "is_active": visible_flag,
         }
-        ok, msg = service.update_app_metadata(app_id, payload)
+        ok, message = service.update_app_metadata(app_id, payload)
         if ok:
-            st.success(msg)
+            st.success(message)
             st.rerun()
         else:
-            st.error(msg)
+            st.error(message)
 
     c1, c2, c3 = st.columns([1, 1, 2])
     with c1:
         toggle_label = "Disable App" if bool(app.get("is_active")) else "Enable App"
         if st.button(toggle_label, use_container_width=True, key=f"admin_toggle_{app_id}"):
-            ok, msg = service.set_app_active(app_id, not bool(app.get("is_active")))
+            ok, message = service.set_app_active(app_id, not bool(app.get("is_active")))
             if ok:
-                st.success(msg)
+                st.success(message)
                 st.rerun()
             else:
-                st.error(msg)
+                st.error(message)
+
     with c2:
-        confirm = st.checkbox("Confirm Delete", key=f"admin_confirm_delete_{app_id}")
+        confirm_delete = st.checkbox("Confirm Delete", key=f"admin_confirm_delete_{app_id}")
+
     with c3:
         if st.button(
             "Delete App",
             use_container_width=True,
-            disabled=not confirm,
+            disabled=not confirm_delete,
             key=f"admin_delete_{app_id}",
         ):
-            ok, msg = service.delete_app(app_id)
+            ok, message = service.delete_app(app_id)
             if ok:
-                st.success(msg)
+                st.success(message)
                 st.rerun()
             else:
-                st.error(msg)
+                st.error(message)
 
 
 def _render_stats_panel(service: AppStoreService) -> None:
-    st.markdown("### Download Stats")
     rows = service.list_download_stats()
     if not rows:
         st.info("No download stats available.")
         return
 
-    table_rows = [
+    data = [
         {
             "App": row.get("name"),
             "Category": row.get("category"),
@@ -329,7 +324,8 @@ def _render_stats_panel(service: AppStoreService) -> None:
         }
         for row in rows
     ]
-    st.dataframe(table_rows, hide_index=True, use_container_width=True)
+
+    st.dataframe(data, hide_index=True, use_container_width=True)
 
 
 def render_admin_panel(service: AppStoreService) -> None:
@@ -339,27 +335,25 @@ def render_admin_panel(service: AppStoreService) -> None:
 
     username = str(st.session_state.get(SESSION_ADMIN_USER, "admin"))
 
-    c1, c2 = st.columns([3, 1])
-    with c1:
-        st.markdown(
-            f"""
-            <section class="premium-hero">
-                <div class="hero-kicker">Business Admin</div>
-                <h1 class="hero-title">App Store Control Panel</h1>
-                <p class="hero-sub">Signed in as <strong>{username}</strong>. Manage packages, metadata, visibility, and analytics.</p>
-            </section>
-            """,
-            unsafe_allow_html=True,
-        )
-    with c2:
-        if st.button("Logout Admin", use_container_width=True, key="business_admin_logout_panel"):
-            _clear_admin_session()
-            st.rerun()
+    render_hero(
+        kicker="Business Admin",
+        title="App Store Control Panel",
+        subtitle=(
+            f"Signed in as {username}. Manage packages, metadata, visibility, and download analytics from one workspace."
+        ),
+    )
+
+    if st.button("Logout Admin", use_container_width=False, key="admin_panel_logout"):
+        _clear_admin_session()
+        st.rerun()
 
     tab_add, tab_manage, tab_stats = st.tabs(["Add New App", "Manage Apps", "Download Stats"])
+
     with tab_add:
         _render_add_app_panel(service)
+
     with tab_manage:
         _render_manage_apps_panel(service)
+
     with tab_stats:
         _render_stats_panel(service)

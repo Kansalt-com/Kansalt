@@ -1,6 +1,4 @@
-"""
-Business page - overview advisory + app store + admin workflows.
-"""
+from __future__ import annotations
 
 import urllib.parse
 
@@ -8,6 +6,7 @@ import streamlit as st
 
 from pages.business_admin import is_admin_authenticated, render_admin_access, render_admin_panel
 from pages.business_appstore import render as render_app_store
+from pages.ui_kit import render_hero
 from services.appstore_service import AppStoreService
 
 
@@ -42,40 +41,45 @@ BUSINESS_CATEGORIES = [
 ]
 
 BUSINESS_STATUSES = [
-    "1. Business is running good and we want to expand.",
-    "2. Business is stagnant and profit is not increasing.",
-    "3. Business is unstable: some months profit, some months loss.",
-    "4. Business is new and we need market entry + first customers.",
-    "5. Operations are growing but systems are manual and inefficient.",
+    "Business is already stable and we want to scale.",
+    "Business growth has stagnated and profit is flat.",
+    "Business is inconsistent with volatile monthly outcomes.",
+    "Business is new and needs market entry support.",
+    "Business has growth demand but operations are manual.",
 ]
 
 STATUS_SOLUTIONS = {
     BUSINESS_STATUSES[0]: [
-        "Expansion roadmap with market prioritization and branch-level KPI dashboards.",
-        "CRM + marketing automation to scale lead generation and retention.",
-        "Inventory and demand forecasting setup for multi-location growth.",
+        "Expansion roadmap with region prioritization and branch-level performance KPIs.",
+        "CRM and marketing automation stack for predictable lead generation.",
+        "Inventory and demand forecasting workflows for multi-unit scaling.",
     ],
     BUSINESS_STATUSES[1]: [
-        "Revenue leakage audit with sales funnel analytics and conversion tracking.",
-        "Customer segmentation + targeted campaign engine for repeat business.",
-        "Pricing and product mix insights using BI dashboards.",
+        "Revenue leakage diagnosis with funnel analytics and conversion checkpoints.",
+        "Retention campaign engine based on customer segment behavior.",
+        "Pricing and mix optimization dashboards for margin-focused decisions.",
     ],
     BUSINESS_STATUSES[2]: [
-        "Cashflow and margin tracking system with early warning alerts.",
-        "Demand stabilization plan using seasonal trend analytics.",
-        "Operational cost optimization with process automation.",
+        "Cashflow and margin control dashboard with early warning alerts.",
+        "Demand stabilization strategy using seasonal and behavioral signals.",
+        "Process automation to reduce waste and improve operating rhythm.",
     ],
     BUSINESS_STATUSES[3]: [
-        "Launch stack: website, lead capture, CRM, and campaign setup.",
-        "Digital presence and local discoverability strategy.",
-        "First 90-day execution plan with weekly business metrics.",
+        "Launch stack for site, lead capture, CRM, and campaign execution.",
+        "Market visibility strategy for local discovery and first customer acquisition.",
+        "90-day operating system with weekly KPI tracking and accountability loops.",
     ],
     BUSINESS_STATUSES[4]: [
-        "Workflow digitization: invoicing, inventory, and task tracking.",
-        "Management dashboard for real-time business visibility.",
-        "SOP-driven automation to reduce manual errors and delays.",
+        "Workflow digitization for invoicing, inventory, and internal task tracking.",
+        "Unified management dashboard for real-time business visibility.",
+        "SOP-led automation to cut repeat errors and operational delays.",
     ],
 }
+
+
+@st.cache_resource
+def _get_appstore_service() -> AppStoreService:
+    return AppStoreService()
 
 
 def _wa_link(message: str) -> str:
@@ -85,79 +89,79 @@ def _wa_link(message: str) -> str:
     return f"https://wa.me/{digits}?text={urllib.parse.quote(message)}"
 
 
-@st.cache_resource
-def _get_appstore_service() -> AppStoreService:
-    return AppStoreService()
-
-
 def _render_overview() -> None:
-    st.markdown(
-        """
-        <section class="premium-hero">
-            <div class="hero-kicker">Business</div>
-            <h1 class="hero-title">Tech Solutions For Every Business Category</h1>
-            <p class="hero-sub">Select your business category and current status. We will map the right technology interventions for growth, stability, and efficiency.</p>
-        </section>
-        """,
-        unsafe_allow_html=True,
+    render_hero(
+        kicker="Business Advisory",
+        title="Select your business scenario and receive a focused technology transformation plan.",
+        subtitle=(
+            "This module mirrors consulting workflows: diagnose current state, map interventions, "
+            "and move into app-enabled execution through the business app store."
+        ),
     )
 
-    st.markdown('<div class="section-shell">', unsafe_allow_html=True)
-    st.markdown('<div class="section-title">Step 1: Select Business Category</div>', unsafe_allow_html=True)
-    st.markdown('<div class="section-subtitle">Autocomplete is prefix-based. Example: type "tea" to see categories starting with tea.</div>', unsafe_allow_html=True)
+    st.markdown('<section class="k-section reveal">', unsafe_allow_html=True)
+    st.markdown('<div class="k-filter-head">Step 1: Business Category</div>', unsafe_allow_html=True)
 
-    query = st.text_input(
-        "Search business category",
-        placeholder="Type category prefix (e.g., tea, text, travel)",
+    category_query = st.text_input(
+        "Category Search",
+        placeholder="Type category prefix, for example tea or retail",
         key="business_category_query",
+        label_visibility="collapsed",
     ).strip()
 
-    filtered_categories = BUSINESS_CATEGORIES
-    if query:
-        filtered_categories = [c for c in BUSINESS_CATEGORIES if c.lower().startswith(query.lower())]
+    category_options = BUSINESS_CATEGORIES
+    if category_query:
+        category_options = [item for item in BUSINESS_CATEGORIES if item.lower().startswith(category_query.lower())]
 
-    if not filtered_categories:
-        st.info("No category starts with this text. Try another prefix.")
-        st.markdown('</div>', unsafe_allow_html=True)
+    if not category_options:
+        st.info("No category starts with that text. Try another prefix.")
+        st.markdown('</section>', unsafe_allow_html=True)
         return
 
     selected_category = st.selectbox(
-        "Business category",
-        options=filtered_categories,
+        "Business Category",
+        options=category_options,
         key="business_selected_category",
-        help="Dropdown supports typeahead; list is already filtered by your prefix.",
     )
 
-    st.markdown('<div class="section-title" style="margin-top:10px;">Step 2: Select Current Business Status</div>', unsafe_allow_html=True)
+    st.markdown('<div class="k-filter-head" style="margin-top:0.8rem;">Step 2: Current Business Status</div>', unsafe_allow_html=True)
     selected_status = st.radio(
-        "Current status",
+        "Current Status",
         options=BUSINESS_STATUSES,
         key="business_status_radio",
+        label_visibility="collapsed",
     )
 
-    st.markdown('<div class="section-title" style="margin-top:10px;">Recommended Tech-Based Solutions</div>', unsafe_allow_html=True)
-    for item in STATUS_SOLUTIONS[selected_status]:
+    st.markdown('<div class="k-filter-head" style="margin-top:0.9rem;">Recommended Solutions</div>', unsafe_allow_html=True)
+    for solution in STATUS_SOLUTIONS[selected_status]:
         st.markdown(
-            f'<article class="premium-card business-card"><p class="result-description" style="margin:0;">{item}</p></article>',
+            f"""
+            <article class="k-card reveal">
+                <p class="k-course" style="margin:0;">{solution}</p>
+            </article>
+            """,
             unsafe_allow_html=True,
         )
 
-    msg = (
+    message = (
         f"Hello Kansalt, my business category is {selected_category}. "
-        f"Current status: {selected_status} Please share a tech solution plan."
+        f"Current status: {selected_status} Please share a practical technology plan."
     )
-    wa = _wa_link(msg)
+    wa_url = _wa_link(message)
 
-    c1, c2 = st.columns(2)
+    c1, c2 = st.columns([1.2, 1])
     with c1:
-        st.markdown('<div class="new-market-note">We are a new market entrant focused on practical implementation, not generic consulting decks.</div>', unsafe_allow_html=True)
+        st.markdown(
+            '<div class="k-admin-note">Kansalt combines strategy and implementation. The output is an executable operating plan, not generic slideware.</div>',
+            unsafe_allow_html=True,
+        )
     with c2:
-        if wa:
-            st.link_button("Get Solution Plan on WhatsApp", wa, use_container_width=True)
+        if wa_url:
+            st.link_button("Get Solution Plan", wa_url, use_container_width=True)
         else:
-            st.button("Get Solution Plan on WhatsApp", disabled=True, use_container_width=True)
+            st.button("Get Solution Plan", disabled=True, use_container_width=True)
 
-    st.markdown('</div>', unsafe_allow_html=True)
+    st.markdown('</section>', unsafe_allow_html=True)
 
 
 def render() -> None:
@@ -168,8 +172,10 @@ def render() -> None:
         tab_names.append("Admin")
 
     tabs = st.tabs(tab_names)
+
     with tabs[0]:
         _render_overview()
+
     with tabs[1]:
         render_app_store(service)
 
@@ -178,4 +184,3 @@ def render() -> None:
             render_admin_panel(service)
     else:
         render_admin_access(service)
-

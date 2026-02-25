@@ -1,167 +1,194 @@
-import streamlit as st
+from __future__ import annotations
+
+import json
 import sys
-import os
-from pathlib import Path   # already needed
+from pathlib import Path
+from typing import Dict
 
-# FIX: project_root must be defined before CSS load
-project_root = Path(__file__).resolve().parents[1]
+import streamlit as st
+import streamlit.components.v1 as components
 
-# Add project root to path
-if str(project_root) not in sys.path:
-    sys.path.insert(0, str(project_root))
+ROOT = Path(__file__).resolve().parents[1]
+if str(ROOT) not in sys.path:
+    sys.path.insert(0, str(ROOT))
 
-# LOAD GLOBAL STYLES
-css_file = project_root / "public" / "styles.css"
-if css_file.exists():
-    st.markdown(
-        f"""
-        <style>
-        {css_file.read_text(encoding="utf-8")}
-
-        /* ensure app content is above animated background */
-        .stApp,
-        [data-testid="stAppViewContainer"],
-        [data-testid="stMain"] {{
-            position: relative;
-            z-index: 2;
-        }}
-        </style>
-        """,
-        unsafe_allow_html=True
-    )
-
-
-# =====================================================
-# ADD PROJECT ROOT TO PATH
-# =====================================================
-project_root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-if project_root not in sys.path:
-    sys.path.insert(0, project_root)
-
-# =====================================================
-# NEW: LOAD GLOBAL CSS (public/styles.css)
-# =====================================================
-def load_global_css():
-    css_path = Path(project_root) / "public" / "styles.css"
-    if css_path.exists():
-        st.markdown(
-            f"<style>{css_path.read_text(encoding='utf-8')}</style>",
-            unsafe_allow_html=True
-        )
-    else:
-        st.error(f"styles.css not found at {css_path}")
-
-load_global_css()
-
-# =====================================================
-# IMPORT TAB RENDER FUNCTIONS
-# =====================================================
-from pages.home import render as render_home
-from pages.education import render as render_education
-from pages.jobs import render as render_jobs
-from pages.business import render as render_business
-
-# =====================================================
-# PAGE CONFIG
-# =====================================================
 st.set_page_config(
+    page_title="Kansalt | Global Consulting + Technology",
+    page_icon="K",
     layout="wide",
-    page_title="Kansalt - Jobs Dashboard",
-    page_icon="💼",
-    initial_sidebar_state="expanded",
+    initial_sidebar_state="collapsed",
 )
 
-# =====================================================
-# YOUR EXISTING INLINE STYLE (UNCHANGED)
-# =====================================================
-st.markdown("""
-<style>
-    :root {
-        --primary-bg: #F4FAFA;
-        --secondary-bg: #E6F4F3;
-        --card-bg: #FFFFFF;
-        --accent: #0F766E;
-        --accent-secondary: #14B8A6;
-        --accent-light: #99F6E4;
-        --text-primary: #0F172A;
-        --text-secondary: #475569;
-        --text-muted: #6B7280;
-        --border: #D1FAF5;
-        --card-radius: 8px;
-        --duration: 200ms;
-        --ease: cubic-bezier(0.4, 0, 0.2, 1);
-    }
+from pages.business import render as render_business
+from pages.education import render as render_education
+from pages.home import render as render_home
+from pages.jobs import render as render_jobs
+from pages.ui_kit import route_url
 
-    html, body, main {
-        background: var(--primary-bg) !important;
-        color: var(--text-primary) !important;
-        font-family: 'Segoe UI', Arial, sans-serif !important;
-        line-height: 1.5;
-        font-size: 0.97rem;
-        min-height: 100vh;
-    }
-</style>
-""", unsafe_allow_html=True)
 
-# =====================================================
-# SESSION STATE
-# =====================================================
-if "selected_tab" not in st.session_state:
-    st.session_state.selected_tab = "Home"
+TAB_RENDERERS = {
+    "Home": render_home,
+    "Education": render_education,
+    "Jobs": render_jobs,
+    "Business": render_business,
+}
 
-if "last_search_results" not in st.session_state:
-    st.session_state.last_search_results = []
+TAB_TITLES: Dict[str, str] = {
+    "Home": "Kansalt | Premium Consulting Platform",
+    "Education": "Kansalt Education | Global University Discovery",
+    "Jobs": "Kansalt Jobs | Smart Job Aggregator Dashboard",
+    "Business": "Kansalt Business | App Store and Technology Advisory",
+}
 
-# =====================================================
-# GLOBAL NAVBAR
-# =====================================================
-st.markdown('<div class="navbar-container">', unsafe_allow_html=True)
+TAB_DESCRIPTIONS: Dict[str, str] = {
+    "Home": "Kansalt is a global consulting and technology platform connecting education, jobs, and business growth workflows.",
+    "Education": "Search universities by rank, budget, and scholarship to plan your study abroad strategy.",
+    "Jobs": "Find role-matched opportunities through a clean card-based dashboard with skills, location, and date filters.",
+    "Business": "Explore business solutions and an app-store style catalog with admin-managed application onboarding.",
+}
 
-navbar_col1, navbar_col2, navbar_col3 = st.columns([1, 2, 1])
 
-with navbar_col1:
-    st.markdown('<div class="navbar-brand">💼 Kansalt</div>', unsafe_allow_html=True)
+def _load_global_css() -> None:
+    css_path = ROOT / "public" / "styles.css"
+    if css_path.exists():
+        st.markdown(f"<style>{css_path.read_text(encoding='utf-8')}</style>", unsafe_allow_html=True)
 
-with navbar_col2:
-    col_home, col_ed, col_jobs, col_bus = st.columns([1, 1, 1, 1])
 
-    with col_home:
-        if st.button("🏠 Home", use_container_width=True):
-            st.session_state.selected_tab = "Home"
-            st.rerun()
+def _query_value(name: str, default: str = "") -> str:
+    value = st.query_params.get(name, default)
+    if isinstance(value, list):
+        return str(value[0]) if value else default
+    return str(value)
 
-    with col_ed:
-        if st.button("🎓 Education", use_container_width=True):
-            st.session_state.selected_tab = "Education"
-            st.rerun()
 
-    with col_jobs:
-        if st.button("💼 Jobs", use_container_width=True):
-            st.session_state.selected_tab = "Jobs"
-            st.rerun()
+def _normalize_tab(raw: str) -> str:
+    candidate = (raw or "").strip().title()
+    if candidate not in TAB_RENDERERS:
+        return "Home"
+    return candidate
 
-    with col_bus:
-        if st.button("🏢 Business", use_container_width=True):
-            st.session_state.selected_tab = "Business"
-            st.rerun()
 
-with navbar_col3:
+def _render_navbar(active_tab: str) -> None:
+    menu = [
+        ("Home", route_url("Home")),
+        ("Education", route_url("Education")),
+        ("Jobs", route_url("Jobs")),
+        ("Business", route_url("Business")),
+        ("About", route_url("Home", "about")),
+        ("Contact", route_url("Home", "contact")),
+    ]
+
+    links = []
+    for label, href in menu:
+        active = " class=\"is-active\"" if (label == active_tab and label in TAB_RENDERERS) else ""
+        links.append(f'<a{active} href="{href}">{label}</a>')
+
     st.markdown(
-        '<div style="text-align: right; font-size: 0.85rem; color: var(--text-muted);">👤 Login</div>',
-        unsafe_allow_html=True
+        f"""
+        <nav id="k-navbar">
+            <div class="k-nav-inner">
+                <a class="k-nav-brand" href="{route_url('Home')}">K<span>ansalt</span></a>
+                <div class="k-nav-menu">{''.join(links)}</div>
+                <a class="k-nav-cta" href="{route_url('Business')}">Get Started</a>
+            </div>
+        </nav>
+        <div class="k-nav-spacer"></div>
+        """,
+        unsafe_allow_html=True,
     )
 
-st.markdown('</div>', unsafe_allow_html=True)
 
-# =====================================================
-# TAB DISPATCH
-# =====================================================
-if st.session_state.selected_tab == "Home":
-    render_home()
-elif st.session_state.selected_tab == "Education":
-    render_education()
-elif st.session_state.selected_tab == "Business":
-    render_business()
-else:
-    render_jobs()
+def _inject_runtime_scripts(selected_tab: str, section_target: str) -> None:
+    page_title = TAB_TITLES.get(selected_tab, TAB_TITLES["Home"])
+    page_description = TAB_DESCRIPTIONS.get(selected_tab, TAB_DESCRIPTIONS["Home"])
 
+    script = f"""
+    <script>
+    (() => {{
+      const rootWin = window.parent;
+      const doc = rootWin.document;
+
+      function upsertMeta(selector, attrs) {{
+        let node = doc.head.querySelector(selector);
+        if (!node) {{
+          node = doc.createElement('meta');
+          doc.head.appendChild(node);
+        }}
+        Object.keys(attrs).forEach((key) => node.setAttribute(key, attrs[key]));
+      }}
+
+      doc.title = {json.dumps(page_title)};
+      upsertMeta('meta[name="description"]', {{ name: 'description', content: {json.dumps(page_description)} }});
+      upsertMeta('meta[property="og:title"]', {{ property: 'og:title', content: {json.dumps(page_title)} }});
+      upsertMeta('meta[property="og:description"]', {{ property: 'og:description', content: {json.dumps(page_description)} }});
+      upsertMeta('meta[name="twitter:card"]', {{ name: 'twitter:card', content: 'summary_large_image' }});
+
+      const nav = doc.getElementById('k-navbar');
+      function refreshNav() {{
+        if (!nav) return;
+        if (rootWin.scrollY > 8) nav.classList.add('is-scrolled');
+        else nav.classList.remove('is-scrolled');
+      }}
+
+      if (!rootWin.__kansaltScrollBound) {{
+        rootWin.addEventListener('scroll', refreshNav, {{ passive: true }});
+        rootWin.__kansaltScrollBound = true;
+      }}
+      refreshNav();
+
+      if (!rootWin.__kansaltRevealObserver) {{
+        rootWin.__kansaltRevealObserver = new rootWin.IntersectionObserver((entries) => {{
+          entries.forEach((entry) => {{
+            if (entry.isIntersecting) {{
+              entry.target.classList.add('in-view');
+            }}
+          }});
+        }}, {{ threshold: 0.14, rootMargin: '0px 0px -8% 0px' }});
+      }}
+
+      const observer = rootWin.__kansaltRevealObserver;
+      const prefersReduced = rootWin.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      doc.querySelectorAll('.reveal').forEach((el) => {{
+        if (prefersReduced) el.classList.add('in-view');
+        observer.observe(el);
+      }});
+
+      const targetId = {json.dumps(section_target)};
+      if (targetId) {{
+        rootWin.setTimeout(() => {{
+          const node = doc.getElementById(targetId);
+          if (node) {{
+            node.scrollIntoView({{ behavior: 'smooth', block: 'start' }});
+          }}
+        }}, 120);
+      }}
+    }})();
+    </script>
+    """
+
+    components.html(script, height=0, width=0)
+
+
+_load_global_css()
+
+selected_tab = _normalize_tab(_query_value("tab", "Home"))
+section = _query_value("section", "").strip().lower()
+if section and selected_tab != "Home":
+    section = ""
+
+st.session_state.selected_tab = selected_tab
+
+_render_navbar(selected_tab)
+
+TAB_RENDERERS[selected_tab]()
+
+_inject_runtime_scripts(selected_tab, section)
+
+st.markdown(
+    """
+    <div class="k-subtle" style="text-align:center;margin-top:2.2rem;">
+      Kansalt Platform | Education | Jobs | Business Technology
+    </div>
+    """,
+    unsafe_allow_html=True,
+)

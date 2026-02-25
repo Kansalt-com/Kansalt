@@ -7,24 +7,24 @@ import sys
 import os
 from pathlib import Path
 
-print("🚀 Job Aggregator Portal - Startup")
+print("Job Aggregator Portal - Startup")
 print("=" * 50)
 
 # Check Python version
 if sys.version_info < (3, 8):
-    print("✗ Python 3.8+ required")
+    print("[ERROR] Python 3.8+ required")
     sys.exit(1)
 
-print("✓ Python version OK")
+print("[OK] Python version OK")
 
 # Check venv
 if sys.prefix == sys.base_prefix:
-    print("⚠️  Not in virtual environment. Recommended: activate venv first")
+    print("[WARN] Not in virtual environment. Recommended: activate venv first")
     print("   Windows: venv\\Scripts\\activate")
     print("   Mac/Linux: source venv/bin/activate")
 
 # Run setup
-print("\n📦 Running setup...")
+print("\nRunning setup...")
 result = subprocess.run([sys.executable, "setup.py"], cwd=".", capture_output=True, text=True)
 print(result.stdout)
 if result.returncode != 0:
@@ -32,7 +32,7 @@ if result.returncode != 0:
     sys.exit(1)
 
 # Optional: Test scrapers
-test_choice = input("\n🧪 Run scraper tests? (y/n): ").lower().strip()
+test_choice = input("\nRun scraper tests? (y/n): ").lower().strip()
 if test_choice == "y":
     print("\nTesting scrapers...")
     result = subprocess.run([sys.executable, "test_scrapers.py"], cwd=".", capture_output=True, text=True)
@@ -42,7 +42,7 @@ if test_choice == "y":
 
 # Start Streamlit
 print("\n" + "=" * 50)
-print("🌐 Starting Streamlit app...")
+print("Starting Streamlit app...")
 print("=" * 50)
 print("App will open at: http://localhost:8501")
 print("Press Ctrl+C to stop\n")
