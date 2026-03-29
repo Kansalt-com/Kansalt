@@ -1,0 +1,95 @@
+@import url('https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Sora:wght@600;700;800&display=swap');
+@import "tailwindcss";
+
+@theme {
+  --font-sans: "Manrope", sans-serif;
+  --font-display: "Sora", sans-serif;
+
+  --color-brand-50: #eef7ff;
+  --color-brand-100: #d8ecff;
+  --color-brand-200: #b4ddff;
+  --color-brand-300: #7dc7ff;
+  --color-brand-400: #3aa7ff;
+  --color-brand-500: #157ff0;
+  --color-brand-600: #0d67ca;
+  --color-brand-700: #1052a0;
+  --color-brand-800: #123f78;
+  --color-brand-900: #14355f;
+
+  --color-teal-500: #18a999;
+  --color-ink-950: #09111f;
+  --color-ink-900: #0f172a;
+  --color-surface: #f6f8fb;
+  --color-surface-strong: #eef3f9;
+
+  --shadow-soft: 0 20px 60px rgba(15, 23, 42, 0.08);
+  --shadow-float: 0 24px 80px rgba(21, 127, 240, 0.12);
+}
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    @apply bg-white font-sans text-slate-700 antialiased;
+  }
+
+  ::selection {
+    background: rgba(21, 127, 240, 0.18);
+    color: #09111f;
+  }
+
+  a,
+  button {
+    @apply transition-all duration-300;
+  }
+}
+
+@layer components {
+  .section-shell {
+    @apply mx-auto w-full max-w-7xl px-6 sm:px-8 lg:px-10;
+  }
+
+  .section-spacing {
+    @apply py-18 sm:py-22 lg:py-28;
+  }
+
+  .glass-panel {
+    @apply border border-white/70 bg-white/80 backdrop-blur-xl;
+    box-shadow: var(--shadow-soft);
+  }
+
+  .card-surface {
+    @apply rounded-[28px] border border-slate-200/80 bg-white;
+    box-shadow: var(--shadow-soft);
+  }
+
+  .gradient-border {
+    position: relative;
+    isolation: isolate;
+  }
+
+  .gradient-border::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    border-radius: inherit;
+    padding: 1px;
+    background:
+      linear-gradient(145deg, rgba(21, 127, 240, 0.22), rgba(24, 169, 153, 0.06), rgba(15, 23, 42, 0.08));
+    -webkit-mask:
+      linear-gradient(#fff 0 0) content-box,
+      linear-gradient(#fff 0 0);
+    -webkit-mask-composite: xor;
+    mask-composite: exclude;
+  }
+
+  .grid-pattern {
+    background-image:
+      linear-gradient(rgba(148, 163, 184, 0.08) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(148, 163, 184, 0.08) 1px, transparent 1px);
+    background-size: 42px 42px;
+  }
+}
