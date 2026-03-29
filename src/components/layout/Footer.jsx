@@ -8,7 +8,7 @@ const socials = [
   { icon: FiLinkedin, href: '#contact', label: 'LinkedIn' },
   { icon: FiTwitter, href: '#contact', label: 'X' },
   { icon: FiInstagram, href: '#contact', label: 'Instagram' },
-  { icon: FiMail, href: 'mailto:hello@qode27.com', label: 'Email' },
+  { icon: FiMail, href: 'mailto:qode27business@gmail.com', label: 'Email' },
 ]
 
 export default function Footer() {
@@ -40,8 +40,8 @@ export default function Footer() {
           <div>
             <h3 className="text-sm font-semibold uppercase tracking-[0.2em] text-neutral-500">Contact</h3>
             <div className="mt-4 space-y-3 text-sm text-neutral-600">
-              <p>hello@qode27.com</p>
-              <p>+91 00000 00000</p>
+              <p>qode27business@gmail.com</p>
+              <p>+91 7022556960</p>
               <p>Business software for hospitals, firms, and growth-focused teams.</p>
             </div>
             <div className="mt-5 flex items-center gap-3">

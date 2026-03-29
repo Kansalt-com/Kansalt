@@ -30,7 +30,7 @@ export default function FinalCtaSection() {
                   <FiArrowRight />
                 </Button>
                 <Button
-                  href="mailto:hello@qode27.com"
+                  href="mailto:qode27business@gmail.com"
                   variant="secondary"
                   className="border-white/18 bg-white text-black sm:min-w-[10.5rem]"
                 >
