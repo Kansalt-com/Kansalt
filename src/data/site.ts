@@ -40,8 +40,6 @@ export type Product = {
 
 export type PricingPlan = {
   name: string
-  price: string
-  cadence: string
   description: string
   features: string[]
   cta: string
@@ -177,8 +175,6 @@ export const differentiators: ContentCard[] = [
 export const pricingPlans: PricingPlan[] = [
   {
     name: 'Basic',
-    price: '\u20B919k',
-    cadence: '/month',
     description: 'A clean starting point for businesses moving from manual work to organized software.',
     features: ['Core workflows', 'Up to 10 team members', 'Email support', 'Basic reports'],
     cta: 'Get Started',
@@ -186,8 +182,6 @@ export const pricingPlans: PricingPlan[] = [
   },
   {
     name: 'Pro',
-    price: '\u20B949k',
-    cadence: '/month',
     description: 'Ideal for growing teams that need automation, stronger visibility, and better coordination.',
     features: ['Advanced automations', 'Up to 50 team members', 'Priority support', 'Custom dashboards'],
     cta: 'Book Demo',
@@ -195,8 +189,6 @@ export const pricingPlans: PricingPlan[] = [
   },
   {
     name: 'Enterprise',
-    price: 'Custom',
-    cadence: '',
     description: 'For larger or more complex operations that need tailored workflows, onboarding, and support.',
     features: ['Custom implementation', 'Unlimited users', 'Dedicated support', 'Process consulting'],
     cta: 'Talk to Sales',

@@ -37,9 +37,8 @@ export default function PricingSection() {
                 <p className={`text-sm font-semibold uppercase tracking-[0.2em] ${plan.featured ? 'text-brand-200' : 'text-neutral-500'}`}>
                   {plan.name}
                 </p>
-                <div className="mt-5 flex items-end gap-2">
-                  <span className="font-display text-5xl font-semibold tracking-[-0.06em]">{plan.price}</span>
-                  <span className={`pb-1 text-sm ${plan.featured ? 'text-white/70' : 'text-neutral-500'}`}>{plan.cadence}</span>
+                <div className="mt-5 inline-flex w-fit rounded-xl border px-3 py-2 text-xs font-semibold uppercase tracking-[0.18em]">
+                  <span className={plan.featured ? 'text-brand-100' : 'text-neutral-600'}>Custom consultation</span>
                 </div>
                 <p className={`mt-5 text-sm leading-7 ${plan.featured ? 'text-white/75' : 'text-neutral-600'}`}>{plan.description}</p>
                 <ul className="mt-8 space-y-4">
