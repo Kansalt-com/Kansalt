@@ -1,3 +1,4 @@
+import type { IconType } from 'react-icons'
 import {
   FiActivity,
   FiArrowRight,
@@ -19,7 +20,41 @@ import {
   FiZap,
 } from 'react-icons/fi'
 
-export const navigation = [
+export type NavItem = {
+  label: string
+  href: string
+}
+
+export type ContentCard = {
+  icon: IconType
+  title: string
+  text: string
+}
+
+export type Product = {
+  icon: IconType
+  title: string
+  description: string
+  highlights: string[]
+}
+
+export type PricingPlan = {
+  name: string
+  price: string
+  cadence: string
+  description: string
+  features: string[]
+  cta: string
+  featured: boolean
+}
+
+export type Testimonial = {
+  quote: string
+  name: string
+  role: string
+}
+
+export const navigation: NavItem[] = [
   { label: 'Home', href: '#home' },
   { label: 'Products', href: '#products' },
   { label: 'Solutions', href: '#solutions' },
@@ -27,9 +62,9 @@ export const navigation = [
   { label: 'Contact', href: '#contact' },
 ]
 
-export const trustLabels = ['Hospitals', 'CA Firms', 'SMEs', 'Clinics', 'Operations Teams']
+export const trustLabels: string[] = ['Hospitals', 'CA Firms', 'SMEs', 'Clinics', 'Operations Teams']
 
-export const products = [
+export const products: Product[] = [
   {
     icon: FiHeart,
     title: 'Hospital Management System (SIMS)',
@@ -50,7 +85,7 @@ export const products = [
   },
 ]
 
-export const industries = [
+export const industries: ContentCard[] = [
   {
     icon: FiActivity,
     title: 'Hospitals',
@@ -73,7 +108,7 @@ export const industries = [
   },
 ]
 
-export const features = [
+export const features: ContentCard[] = [
   {
     icon: FiClock,
     title: 'Fast Setup',
@@ -106,7 +141,7 @@ export const features = [
   },
 ]
 
-export const differentiators = [
+export const differentiators: ContentCard[] = [
   {
     icon: FiCheckCircle,
     title: 'Built for real business workflows',
@@ -139,7 +174,7 @@ export const differentiators = [
   },
 ]
 
-export const pricingPlans = [
+export const pricingPlans: PricingPlan[] = [
   {
     name: 'Basic',
     price: '\u20B919k',
@@ -169,7 +204,7 @@ export const pricingPlans = [
   },
 ]
 
-export const testimonials = [
+export const testimonials: Testimonial[] = [
   {
     quote:
       'Qode27 helped us bring patient operations and billing into one clean workflow. Our team picked it up quickly, and day-to-day coordination became far easier.',
@@ -190,7 +225,7 @@ export const testimonials = [
   },
 ]
 
-export const footerLinks = [
+export const footerLinks: NavItem[] = [
   { label: 'Home', href: '#home' },
   { label: 'Products', href: '#products' },
   { label: 'Solutions', href: '#solutions' },

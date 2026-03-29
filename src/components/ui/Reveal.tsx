@@ -1,7 +1,14 @@
+import type { ReactNode } from 'react'
 import { motion as Motion, useReducedMotion } from 'framer-motion'
 import { fadeUp } from '../../utils/motion'
 
-export default function Reveal({ children, className = '', delay = 0 }) {
+interface RevealProps {
+  children: ReactNode
+  className?: string
+  delay?: number
+}
+
+export default function Reveal({ children, className = '', delay = 0 }: RevealProps) {
   const reduceMotion = useReducedMotion()
 
   if (reduceMotion) {

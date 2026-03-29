@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 
-export function useScrolled(threshold = 18) {
+export function useScrolled(threshold = 18): boolean {
   const [scrolled, setScrolled] = useState(false)
 
   useEffect(() => {

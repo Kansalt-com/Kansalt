@@ -1,5 +1,5 @@
 import { AnimatePresence, motion as Motion } from 'framer-motion'
-import { useEffect, useState } from 'react'
+import { useEffect, useState, type KeyboardEvent as ReactKeyboardEvent } from 'react'
 import { FiMenu, FiX } from 'react-icons/fi'
 import { navigation } from '../../data/site'
 import { useScrolled } from '../../hooks/useScrolled'
@@ -8,11 +8,11 @@ import Button from '../ui/Button'
 import Container from '../ui/Container'
 
 export default function Navbar() {
-  const [open, setOpen] = useState(false)
+  const [open, setOpen] = useState<boolean>(false)
   const scrolled = useScrolled()
 
   useEffect(() => {
-    const onKeyDown = (event) => {
+    const onKeyDown = (event: KeyboardEvent) => {
       if (event.key === 'Escape') {
         setOpen(false)
       }
@@ -30,6 +30,20 @@ export default function Navbar() {
       document.body.style.overflow = ''
     }
   }, [open])
+
+  const toggleMenu = () => {
+    setOpen((value) => !value)
+  }
+
+  const closeMenu = () => {
+    setOpen(false)
+  }
+
+  const handleMobileLinkKeyDown = (event: ReactKeyboardEvent<HTMLAnchorElement>) => {
+    if (event.key === 'Enter' || event.key === ' ') {
+      closeMenu()
+    }
+  }
 
   return (
     <header className="sticky top-0 z-50 pt-4">
@@ -49,7 +63,7 @@ export default function Navbar() {
         >
           <div className="flex items-center justify-between gap-4">
             <a href="#home" className="flex items-center" aria-label="Qode27 home">
-              <BrandLogo className="h-12 sm:h-[3.25rem] max-w-[15rem] sm:max-w-[18rem]" />
+              <BrandLogo className="h-12 max-w-[15rem] sm:h-[3.25rem] sm:max-w-[18rem]" />
             </a>
 
             <nav className="hidden items-center gap-6 lg:flex" aria-label="Primary navigation">
@@ -69,7 +83,7 @@ export default function Navbar() {
             <button
               type="button"
               className="inline-flex h-11 w-11 items-center justify-center rounded-xl border border-neutral-200 bg-white/90 text-black shadow-[0_10px_24px_rgba(11,11,11,0.06)] hover:border-brand-300 hover:text-brand-700 lg:hidden"
-              onClick={() => setOpen((value) => !value)}
+              onClick={toggleMenu}
               aria-label={open ? 'Close navigation menu' : 'Open navigation menu'}
               aria-expanded={open}
             >
@@ -90,7 +104,7 @@ export default function Navbar() {
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
               transition={{ duration: 0.25, ease: 'easeOut' }}
-              onClick={() => setOpen(false)}
+              onClick={closeMenu}
             />
             <Motion.div
               initial={{ opacity: 0, y: -12 }}
@@ -106,7 +120,8 @@ export default function Navbar() {
                       key={item.label}
                       href={item.href}
                       className="rounded-2xl px-4 py-3 text-sm font-medium text-neutral-700 hover:bg-neutral-100 hover:text-black"
-                      onClick={() => setOpen(false)}
+                      onClick={closeMenu}
+                      onKeyDown={handleMobileLinkKeyDown}
                       initial={{ opacity: 0, y: 10 }}
                       animate={{ opacity: 1, y: 0 }}
                       exit={{ opacity: 0, y: 8 }}
@@ -115,7 +130,7 @@ export default function Navbar() {
                       {item.label}
                     </Motion.a>
                   ))}
-                  <Button href="#contact" className="mt-2 w-full justify-center" size="sm" onClick={() => setOpen(false)}>
+                  <Button href="#contact" className="mt-2 w-full justify-center" size="sm" onClick={closeMenu}>
                     Get Demo
                   </Button>
                 </nav>

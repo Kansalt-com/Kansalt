@@ -1,10 +1,17 @@
 import { createElement } from 'react'
+import type { IconType } from 'react-icons'
 import { FiInstagram, FiLinkedin, FiMail, FiTwitter } from 'react-icons/fi'
 import { footerLinks } from '../../data/site'
 import BrandLogo from '../ui/BrandLogo'
 import Container from '../ui/Container'
 
-const socials = [
+type SocialLink = {
+  icon: IconType
+  href: string
+  label: string
+}
+
+const socials: SocialLink[] = [
   { icon: FiLinkedin, href: '#contact', label: 'LinkedIn' },
   { icon: FiTwitter, href: '#contact', label: 'X' },
   { icon: FiInstagram, href: '#contact', label: 'Instagram' },

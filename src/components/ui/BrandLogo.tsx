@@ -1,4 +1,14 @@
-export default function BrandLogo({ className = '', iconOnly = false, dark = false }) {
+interface BrandLogoProps {
+  className?: string
+  iconOnly?: boolean
+  dark?: boolean
+}
+
+export default function BrandLogo({
+  className = '',
+  iconOnly = false,
+  dark = false,
+}: BrandLogoProps) {
   const src = iconOnly ? '/qode27-icon-cropped.png' : '/qode27-wordmark-cropped.png'
   const alt = iconOnly ? 'Qode27 icon logo' : 'Qode27.com logo'
 
