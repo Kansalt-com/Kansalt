@@ -9,6 +9,7 @@ const ProductsPage = lazy(() => import('./pages/ProductsPage'))
 const PricingPage = lazy(() => import('./pages/PricingPage'))
 const ContactPage = lazy(() => import('./pages/ContactPage'))
 const ProductDetailPage = lazy(() => import('./pages/ProductDetailPage'))
+const DemoLauncherPage = lazy(() => import('./pages/demo/DemoLauncherPage'))
 const HmsDemoPage = lazy(() => import('./pages/demo/HmsDemoPage'))
 
 export default function App() {
@@ -26,6 +27,7 @@ export default function App() {
       <Suspense fallback={<PageSkeleton />}>
         <AnimatePresence mode="wait">
           <Routes location={location} key={location.pathname}>
+            <Route path="/:appKey/demo" element={<DemoLauncherPage />} />
             <Route element={<SiteLayout />}>
               <Route index element={<HomePage />} />
               <Route path="/products" element={<ProductsPage />} />

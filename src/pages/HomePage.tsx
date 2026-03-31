@@ -88,7 +88,7 @@ export default function HomePage() {
                 Qode27 turns admin-heavy workflows into premium SaaS experiences for healthcare, HR, and automation-first businesses that need speed, clarity, and adoption.
               </p>
               <div className="mt-9 flex flex-col gap-4 sm:flex-row sm:flex-wrap">
-                <Button href="/demo/hms" className="sm:min-w-[11rem]">
+                <Button href="/hms/demo" className="sm:min-w-[11rem]">
                   View Demo
                   <FiPlayCircle />
                 </Button>

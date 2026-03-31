@@ -2,6 +2,7 @@ import { createElement } from 'react'
 import { motion as Motion } from 'framer-motion'
 import { FiArrowRight, FiCheck } from 'react-icons/fi'
 import { Link } from 'react-router-dom'
+import { getAppByProductSlug } from '../../config/apps'
 import type { Product } from '../../data/site'
 
 interface ProductCardProps {
@@ -9,6 +10,8 @@ interface ProductCardProps {
 }
 
 export default function ProductCard({ product }: ProductCardProps) {
+  const demoApp = getAppByProductSlug(product.slug)
+
   return (
     <Motion.article
       whileHover={{ y: -6, scale: 1.01 }}
@@ -44,7 +47,7 @@ export default function ProductCard({ product }: ProductCardProps) {
           <FiArrowRight />
         </Link>
         <Link
-          to={product.slug === 'hms' ? '/demo/hms' : `/products/${product.slug}`}
+          to={demoApp?.demoPath ?? `/products/${product.slug}`}
           className="inline-flex items-center gap-2 rounded-xl border border-black/10 bg-[#f5f8f9] px-4 py-2 text-sm font-semibold text-black hover:border-[var(--color-accent)] hover:bg-white"
         >
           View Demo

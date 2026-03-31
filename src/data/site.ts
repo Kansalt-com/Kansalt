@@ -1,4 +1,5 @@
 import type { IconType } from 'react-icons'
+import type { AppKey } from '../config/apps'
 import {
   FiArrowRight,
   FiBriefcase,
@@ -21,6 +22,7 @@ export type NavItem = {
 
 export type Product = {
   slug: string
+  appKey?: AppKey
   icon: IconType
   name: string
   category: string
@@ -84,8 +86,9 @@ export const platformHighlights = [
 export const products: Product[] = [
   {
     slug: 'hms',
+    appKey: 'hms',
     icon: FiHeart,
-    name: 'Qode27 HMS',
+    name: 'HMS by Qode27',
     category: 'Healthcare Operations',
     headline: 'Run patient, billing, and front-desk workflows from one clean operating layer.',
     description:
@@ -101,13 +104,14 @@ export const products: Product[] = [
       { label: 'Billing completion lift', value: '+31%' },
       { label: 'Admin time saved', value: '12 hrs/wk' },
     ],
-    primaryCta: { label: 'View Demo', href: '/demo/hms' },
+    primaryCta: { label: 'Try Live Demo', href: '/hms/demo' },
     secondaryCta: { label: 'Get Pricing', href: '/pricing' },
   },
   {
     slug: 'hrms',
+    appKey: 'hrms',
     icon: FiUsers,
-    name: 'Qode27 HRMS',
+    name: 'HRMS by Qode27',
     category: 'People Operations',
     headline: 'Bring people ops, leave approvals, and payroll readiness into one workflow.',
     description:
@@ -123,7 +127,7 @@ export const products: Product[] = [
       { label: 'Payroll prep cycle', value: '2x faster' },
       { label: 'Employee visibility', value: '100%' },
     ],
-    primaryCta: { label: 'Contact Sales', href: '/contact' },
+    primaryCta: { label: 'Try Live Demo', href: '/hrms/demo' },
     secondaryCta: { label: 'Get Pricing', href: '/pricing' },
   },
   {

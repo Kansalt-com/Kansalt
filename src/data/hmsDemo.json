@@ -1,9 +1,4 @@
 {
-  "stats": [
-    { "label": "Patients Today", "value": "128", "trend": "+12%" },
-    { "label": "Open Billing", "value": "₹3.4L", "trend": "+8%" },
-    { "label": "Avg. Wait Time", "value": "14 min", "trend": "-6%" }
-  ],
   "patients": [
     {
       "id": "P-1001",
@@ -11,8 +6,7 @@
       "age": 32,
       "department": "Cardiology",
       "doctor": "Dr. Mehta",
-      "status": "Admitted",
-      "amountDue": 14800
+      "status": "Admitted"
     },
     {
       "id": "P-1002",
@@ -20,8 +14,7 @@
       "age": 45,
       "department": "Orthopedics",
       "doctor": "Dr. Kapoor",
-      "status": "Under Review",
-      "amountDue": 8600
+      "status": "Under Review"
     },
     {
       "id": "P-1003",
@@ -29,14 +22,49 @@
       "age": 28,
       "department": "Dermatology",
       "doctor": "Dr. Iyer",
-      "status": "Discharge Ready",
-      "amountDue": 4200
+      "status": "Discharge Ready"
     }
   ],
-  "billingItems": [
-    { "label": "Consultation", "amount": 1200 },
-    { "label": "Diagnostics", "amount": 2800 },
-    { "label": "Pharmacy", "amount": 1650 },
-    { "label": "Ward Charges", "amount": 4500 }
+  "bills": [
+    {
+      "patientId": "P-1001",
+      "invoiceNumber": "HMSQ-20260330-0002",
+      "lineItems": [
+        { "id": "LI-1001", "label": "BTCT", "unitPricePaise": 20000, "quantity": 1 },
+        { "id": "LI-1002", "label": "X-Ray Abdomen Lateral", "unitPricePaise": 30000, "quantity": 1 },
+        { "id": "LI-1003", "label": "Ultrasound Abdomen", "unitPricePaise": 150000, "quantity": 1 }
+      ],
+      "adjustments": [],
+      "payments": [
+        { "id": "PAY-1001", "label": "Card Payment", "amountPaise": 200000, "mode": "Card" }
+      ]
+    },
+    {
+      "patientId": "P-1002",
+      "invoiceNumber": "HMSQ-20260330-0003",
+      "lineItems": [
+        { "id": "LI-2001", "label": "Consultation", "unitPricePaise": 120000, "quantity": 1 },
+        { "id": "LI-2002", "label": "Knee X-Ray", "unitPricePaise": 85000, "quantity": 1 },
+        { "id": "LI-2003", "label": "Supportive Medication", "unitPricePaise": 42000, "quantity": 1 }
+      ],
+      "adjustments": [
+        { "id": "ADJ-2001", "label": "Cash Discount", "amountPaise": 12000, "type": "discount" }
+      ],
+      "payments": [
+        { "id": "PAY-2001", "label": "Advance", "amountPaise": 150000, "mode": "Cash" }
+      ]
+    },
+    {
+      "patientId": "P-1003",
+      "invoiceNumber": "HMSQ-20260330-0004",
+      "lineItems": [
+        { "id": "LI-3001", "label": "Dermatology Consultation", "unitPricePaise": 90000, "quantity": 1 },
+        { "id": "LI-3002", "label": "Lab Screening", "unitPricePaise": 60000, "quantity": 1 }
+      ],
+      "adjustments": [],
+      "payments": [
+        { "id": "PAY-3001", "label": "UPI Payment", "amountPaise": 150000, "mode": "UPI" }
+      ]
+    }
   ]
 }

@@ -1,7 +1,8 @@
 import { AnimatePresence, motion as Motion } from 'framer-motion'
 import { useEffect, useState, type KeyboardEvent as ReactKeyboardEvent } from 'react'
 import { NavLink } from 'react-router-dom'
-import { FiArrowUpRight, FiMenu, FiX } from 'react-icons/fi'
+import { FiArrowUpRight, FiChevronDown, FiMenu, FiX } from 'react-icons/fi'
+import { demoApps } from '../../config/apps'
 import { navigation } from '../../data/site'
 import { useScrolled } from '../../hooks/useScrolled'
 import BrandLogo from '../ui/BrandLogo'
@@ -10,12 +11,14 @@ import Container from '../ui/Container'
 
 export default function Navbar() {
   const [open, setOpen] = useState(false)
+  const [productsOpen, setProductsOpen] = useState(false)
   const scrolled = useScrolled()
 
   useEffect(() => {
     const onKeyDown = (event: KeyboardEvent) => {
       if (event.key === 'Escape') {
         setOpen(false)
+        setProductsOpen(false)
       }
     }
 
@@ -31,7 +34,10 @@ export default function Navbar() {
     }
   }, [open])
 
-  const closeMenu = () => setOpen(false)
+  const closeMenu = () => {
+    setOpen(false)
+    setProductsOpen(false)
+  }
 
   const handleMobileLinkKeyDown = (event: ReactKeyboardEvent<HTMLAnchorElement>) => {
     if (event.key === 'Enter' || event.key === ' ') {
@@ -58,22 +64,77 @@ export default function Navbar() {
             </NavLink>
 
             <nav className="hidden items-center gap-6 lg:flex" aria-label="Primary navigation">
-              {navigation.map((item) => (
-                <NavLink
-                  key={item.label}
-                  to={item.href}
-                  className={({ isActive }) => `nav-link ${isActive ? 'active text-black' : ''}`}
-                >
-                  {item.label}
-                </NavLink>
-              ))}
+              {navigation.map((item) =>
+                item.label === 'Products' ? (
+                  <div
+                    key={item.label}
+                    className="relative"
+                    onMouseEnter={() => setProductsOpen(true)}
+                    onMouseLeave={() => setProductsOpen(false)}
+                  >
+                    <button
+                      type="button"
+                      className={`nav-link inline-flex items-center gap-2 ${productsOpen ? 'active text-black' : ''}`}
+                      onClick={() => setProductsOpen((value) => !value)}
+                      aria-expanded={productsOpen}
+                    >
+                      Products
+                      <FiChevronDown className={`text-xs transition ${productsOpen ? 'rotate-180' : ''}`} />
+                    </button>
+
+                    <AnimatePresence>
+                      {productsOpen ? (
+                        <Motion.div
+                          initial={{ opacity: 0, y: 10 }}
+                          animate={{ opacity: 1, y: 0 }}
+                          exit={{ opacity: 0, y: 8 }}
+                          transition={{ duration: 0.2 }}
+                          className="absolute left-0 top-full mt-4 w-[21rem] rounded-[1.5rem] border border-black/8 bg-white/96 p-3 shadow-[0_22px_50px_rgba(15,23,42,0.12)] backdrop-blur-xl"
+                        >
+                          {demoApps.map((app) => (
+                            <div key={app.key} className="rounded-[1.2rem] px-2 py-2 hover:bg-[#f5f9f9]">
+                              <p className="px-3 text-xs font-semibold uppercase tracking-[0.22em] text-[var(--color-accent-strong)]">
+                                {app.name}
+                              </p>
+                              <div className="mt-2 grid gap-1">
+                                <NavLink
+                                  to={`/products/${app.productSlug}`}
+                                  className="rounded-xl px-3 py-2 text-sm font-medium text-neutral-700 hover:bg-white hover:text-black"
+                                  onClick={() => setProductsOpen(false)}
+                                >
+                                  View Details
+                                </NavLink>
+                                <NavLink
+                                  to={app.demoPath}
+                                  className="rounded-xl px-3 py-2 text-sm font-medium text-neutral-700 hover:bg-white hover:text-black"
+                                  onClick={() => setProductsOpen(false)}
+                                >
+                                  Try Demo
+                                </NavLink>
+                              </div>
+                            </div>
+                          ))}
+                        </Motion.div>
+                      ) : null}
+                    </AnimatePresence>
+                  </div>
+                ) : (
+                  <NavLink
+                    key={item.label}
+                    to={item.href}
+                    className={({ isActive }) => `nav-link ${isActive ? 'active text-black' : ''}`}
+                  >
+                    {item.label}
+                  </NavLink>
+                ),
+              )}
             </nav>
 
             <div className="hidden lg:flex lg:items-center lg:gap-3">
               <Button href="/pricing" variant="ghost" size="sm">
                 Get Pricing
               </Button>
-              <Button href="/demo/hms" size="sm">
+              <Button href="/hms/demo" size="sm">
                 View Demo
                 <FiArrowUpRight />
               </Button>
@@ -114,7 +175,37 @@ export default function Navbar() {
             >
               <Container className="mt-3 rounded-2xl border border-white/70 bg-white/95 p-4 shadow-[0_24px_55px_rgba(15,23,42,0.12)] backdrop-blur-xl">
                 <nav className="flex flex-col gap-1" aria-label="Mobile navigation">
-                  {navigation.map((item, index) => (
+                  {navigation.map((item, index) =>
+                    item.label === 'Products' ? (
+                      <div key={item.label} className="mt-1 rounded-2xl bg-[#f6f9f9] p-3">
+                        <p className="px-1 text-xs font-semibold uppercase tracking-[0.22em] text-[var(--color-accent-strong)]">
+                          Products
+                        </p>
+                        <div className="mt-3 grid gap-2">
+                          {demoApps.map((app) => (
+                            <div key={app.key} className="rounded-2xl bg-white p-3">
+                              <p className="text-sm font-semibold text-black">{app.name}</p>
+                              <div className="mt-2 grid gap-2">
+                                <NavLink
+                                  to={`/products/${app.productSlug}`}
+                                  onClick={closeMenu}
+                                  className="rounded-xl px-3 py-2 text-sm font-medium text-neutral-700 hover:bg-neutral-100 hover:text-black"
+                                >
+                                  View Details
+                                </NavLink>
+                                <NavLink
+                                  to={app.demoPath}
+                                  onClick={closeMenu}
+                                  className="rounded-xl px-3 py-2 text-sm font-medium text-neutral-700 hover:bg-neutral-100 hover:text-black"
+                                >
+                                  Try Demo
+                                </NavLink>
+                              </div>
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                    ) : (
                     <Motion.div
                       key={item.label}
                       initial={{ opacity: 0, y: 10 }}
@@ -137,9 +228,10 @@ export default function Navbar() {
                         {item.label}
                       </NavLink>
                     </Motion.div>
-                  ))}
+                    ),
+                  )}
                   <div className="mt-2 grid gap-2">
-                    <Button href="/demo/hms" className="w-full justify-center" size="sm" onClick={closeMenu}>
+                    <Button href="/hms/demo" className="w-full justify-center" size="sm" onClick={closeMenu}>
                       View Demo
                     </Button>
                     <Button
