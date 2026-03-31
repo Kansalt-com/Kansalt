@@ -7,12 +7,13 @@
 
   --color-page: #ffffff;
   --color-copy: #5b6670;
-  --color-ink: #081114;
-  --color-accent: #13b2bf;
-  --color-accent-strong: #05707a;
-  --color-accent-soft: #e8fbfc;
+  --color-ink: #0b0b0b;
+  --color-accent: #d4af37;
+  --color-accent-strong: #aa8421;
+  --color-accent-soft: #fbf4da;
+  --color-gold: #d4af37;
 
-  --shadow-soft: 0 22px 54px rgba(8, 17, 20, 0.06);
+  --shadow-soft: 0 22px 54px rgba(11, 11, 11, 0.06);
 }
 
 @layer base {
@@ -23,8 +24,8 @@
   body {
     @apply bg-white font-sans text-neutral-700 antialiased;
     background:
-      radial-gradient(circle at top, rgba(19, 178, 191, 0.08), transparent 30%),
-      linear-gradient(180deg, #ffffff 0%, #fbfcfc 45%, #ffffff 100%);
+      radial-gradient(circle at top, rgba(212, 175, 55, 0.08), transparent 30%),
+      linear-gradient(180deg, #ffffff 0%, #fdfbf5 45%, #ffffff 100%);
   }
 
   #root {
@@ -32,8 +33,8 @@
   }
 
   ::selection {
-    background: rgba(19, 178, 191, 0.18);
-    color: #081114;
+    background: rgba(212, 175, 55, 0.24);
+    color: #0b0b0b;
   }
 
   a,
@@ -87,7 +88,7 @@
     width: 100%;
     transform: scaleX(0);
     transform-origin: left;
-    background: linear-gradient(90deg, #081114, #13b2bf);
+    background: linear-gradient(90deg, #0b0b0b, #d4af37);
     transition: transform 220ms ease;
   }
 
@@ -103,8 +104,8 @@
 
   .product-card:hover {
     box-shadow:
-      0 26px 56px rgba(8, 17, 20, 0.08),
-      0 0 0 1px rgba(19, 178, 191, 0.1);
+      0 26px 56px rgba(11, 11, 11, 0.08),
+      0 0 0 1px rgba(212, 175, 55, 0.16);
   }
 
   .button-glow:hover {

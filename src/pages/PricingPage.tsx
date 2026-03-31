@@ -14,8 +14,8 @@ export default function PricingPage() {
         <Container>
           <SectionHeader
             eyebrow="Pricing"
-            title="Premium rollout quality without generic enterprise sprawl."
-            description="Qode27 pricing is scoped around your workflows, implementation shape, and desired support level so you only pay for what materially improves operations."
+            title="Premium app-store pricing built for SME decision-making."
+            description="Qode27 pricing is scoped around the applications, rollout support, and deployment pace your business actually needs."
             align="center"
           />
           <div className="mt-12 grid gap-6 lg:grid-cols-3">

@@ -1,31 +1,32 @@
 import { createElement } from 'react'
 import { motion as Motion } from 'framer-motion'
-import { FiArrowRight, FiCheck } from 'react-icons/fi'
+import { FiCheck, FiLock } from 'react-icons/fi'
 import { Link } from 'react-router-dom'
 import { getAppByProductSlug } from '../../config/apps'
 import type { Product } from '../../data/site'
+import RequestDemoButton from './RequestDemoButton'
 
 interface ProductCardProps {
   product: Product
 }
 
 export default function ProductCard({ product }: ProductCardProps) {
-  const demoApp = getAppByProductSlug(product.slug)
+  const app = getAppByProductSlug(product.slug)
 
   return (
     <Motion.article
       whileHover={{ y: -6, scale: 1.01 }}
       transition={{ duration: 0.25, ease: 'easeOut' }}
-      className="product-card flex h-full flex-col rounded-[1.75rem] border border-black/8 bg-white p-7"
+      className="product-card flex h-full flex-col rounded-[1.1rem] border border-black/8 bg-white p-7"
     >
       <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-[var(--color-accent-soft)] text-xl text-[var(--color-accent-strong)]">
         {createElement(product.icon)}
       </div>
       <div className="mt-6">
-        <p className="text-xs font-semibold uppercase tracking-[0.26em] text-[var(--color-accent-strong)]">
+        <p className="inline-flex rounded-full bg-[var(--color-accent-soft)] px-3 py-1 text-xs font-semibold uppercase tracking-[0.2em] text-[var(--color-accent-strong)]">
           {product.category}
         </p>
-        <h3 className="mt-3 text-2xl font-semibold tracking-[-0.03em] text-black">{product.name}</h3>
+        <h3 className="mt-4 text-2xl font-semibold tracking-[-0.03em] text-black">{product.name}</h3>
         <p className="mt-4 text-base leading-7 text-neutral-600">{product.description}</p>
       </div>
       <ul className="mt-6 space-y-3">
@@ -38,20 +39,20 @@ export default function ProductCard({ product }: ProductCardProps) {
           </li>
         ))}
       </ul>
+      <div className="mt-6 rounded-[1rem] border border-[var(--color-gold)]/18 bg-[linear-gradient(135deg,rgba(212,175,55,0.12),rgba(212,175,55,0.04))] px-4 py-3">
+        <p className="inline-flex items-center gap-2 text-sm font-medium text-black">
+          <FiLock className="text-[var(--color-accent-strong)]" />
+          Demo available on request
+        </p>
+      </div>
       <div className="mt-auto flex flex-wrap items-center gap-4 pt-8">
         <Link
           to={`/products/${product.slug}`}
           className="inline-flex items-center gap-2 text-sm font-semibold text-black hover:gap-3 hover:text-[var(--color-accent-strong)]"
         >
           Explore Product
-          <FiArrowRight />
         </Link>
-        <Link
-          to={demoApp?.demoPath ?? `/products/${product.slug}`}
-          className="inline-flex items-center gap-2 rounded-xl border border-black/10 bg-[#f5f8f9] px-4 py-2 text-sm font-semibold text-black hover:border-[var(--color-accent)] hover:bg-white"
-        >
-          View Demo
-        </Link>
+        {app ? <RequestDemoButton app={app} label="Request Demo" size="sm" variant="secondary" /> : null}
       </div>
     </Motion.article>
   )

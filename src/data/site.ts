@@ -1,14 +1,16 @@
 import type { IconType } from 'react-icons'
-import type { AppKey } from '../config/apps'
+import type { AppCategory, AppKey } from '../config/apps'
 import {
   FiArrowRight,
   FiBriefcase,
   FiCheckCircle,
   FiClock,
   FiCreditCard,
+  FiDollarSign,
   FiHeart,
   FiLayers,
   FiMail,
+  FiSettings,
   FiShield,
   FiTrendingUp,
   FiUsers,
@@ -23,6 +25,7 @@ export type NavItem = {
 export type Product = {
   slug: string
   appKey?: AppKey
+  categoryKey: AppCategory
   icon: IconType
   name: string
   category: string
@@ -30,6 +33,7 @@ export type Product = {
   description: string
   features: string[]
   benefits: string[]
+  screenshots: string[]
   metrics: { label: string; value: string }[]
   primaryCta: { label: string; href: string }
   secondaryCta: { label: string; href: string }
@@ -55,102 +59,115 @@ export type ContactMethod = {
 export const navigation: NavItem[] = [
   { label: 'Home', href: '/' },
   { label: 'Products', href: '/products' },
-  { label: 'Pricing', href: '/pricing' },
+  { label: 'Categories', href: '/products' },
   { label: 'Contact', href: '/contact' },
 ]
 
 export const heroStats = [
+  { label: 'Business apps in one place', value: '4+' },
+  { label: 'Fast deployment window', value: '7-10 days' },
   { label: 'Teams launched faster', value: '45%' },
-  { label: 'Operational visibility', value: '24/7' },
-  { label: 'Average workflow adoption', value: '94%' },
 ]
 
 export const platformHighlights = [
   {
     icon: FiLayers,
-    title: 'Product-led rollout',
-    text: 'Every flow is designed to feel intuitive on day one, so teams spend less time learning and more time shipping work.',
+    title: 'Built for Indian businesses',
+    text: 'Qode27 packages business software around local workflows, real teams, and practical operational constraints.',
   },
   {
-    icon: FiShield,
-    title: 'Trusted operating core',
-    text: 'Role-aware views, clean permissions, and clear process states make mission-critical operations easier to trust.',
+    icon: FiClock,
+    title: 'Fast deployment',
+    text: 'Focused implementations help teams go live in days, not quarters, while preserving product quality.',
   },
   {
-    icon: FiTrendingUp,
-    title: 'Built to scale with process maturity',
-    text: 'Start with a focused workflow, then expand into automation, reporting, and multi-team coordination without redesigning the stack.',
+    icon: FiDollarSign,
+    title: 'Affordable SaaS solutions',
+    text: 'Premium software experience without enterprise bloat makes adoption easier for SMEs and growing companies.',
   },
 ]
+
+export const categories = [
+  { key: 'Healthcare', icon: FiHeart, description: 'Hospital and clinic operations software for patient-facing teams.' },
+  { key: 'Business', icon: FiBriefcase, description: 'Everyday business apps for HR, admin, and SME operations.' },
+  { key: 'Finance', icon: FiCreditCard, description: 'Finance-focused workflow tools built for visibility and control.' },
+  { key: 'Operations', icon: FiSettings, description: 'Automation and workflow systems for teams that run on process discipline.' },
+] as const
 
 export const products: Product[] = [
   {
     slug: 'hms',
     appKey: 'hms',
+    categoryKey: 'Healthcare',
     icon: FiHeart,
     name: 'HMS by Qode27',
-    category: 'Healthcare Operations',
-    headline: 'Run patient, billing, and front-desk workflows from one clean operating layer.',
+    category: 'Healthcare',
+    headline: 'Hospital workflow software for front-desk speed, billing accuracy, and admin visibility.',
     description:
-      'A hospital management platform that gives admins, reception teams, and finance staff a single source of truth for appointments, admissions, billing, and daily operations.',
-    features: ['Live patient registry', 'Billing and payment previews', 'Admin dashboard with operational KPIs'],
+      'A premium hospital management application for admissions, billing, patient records, and daily operations designed for Indian healthcare teams.',
+    features: ['Patient registry and admissions', 'Billing and payment visibility', 'Operational dashboard for administrators'],
     benefits: [
-      'Reduce front-desk handoff delays across admissions and billing',
-      'Give administrators a simple dashboard for daily performance',
-      'Replace spreadsheet-heavy patient tracking with a product workflow',
+      'Streamline front-desk and billing coordination',
+      'Reduce manual handoffs across patient workflows',
+      'Give administrators a clean daily operating view',
     ],
+    screenshots: ['Operations dashboard', 'Patient intake screen', 'Billing summary view'],
     metrics: [
-      { label: 'Admissions tracked', value: '1.8k/mo' },
-      { label: 'Billing completion lift', value: '+31%' },
-      { label: 'Admin time saved', value: '12 hrs/wk' },
+      { label: 'Deployment window', value: '7-10 days' },
+      { label: 'Billing accuracy focus', value: 'High' },
+      { label: 'Ops visibility', value: 'Real-time' },
     ],
-    primaryCta: { label: 'Try Live Demo', href: '/hms/demo' },
-    secondaryCta: { label: 'Get Pricing', href: '/pricing' },
+    primaryCta: { label: 'Request Demo', href: '/contact' },
+    secondaryCta: { label: 'View Products', href: '/products' },
   },
   {
     slug: 'hrms',
     appKey: 'hrms',
+    categoryKey: 'Business',
     icon: FiUsers,
     name: 'HRMS by Qode27',
-    category: 'People Operations',
-    headline: 'Bring people ops, leave approvals, and payroll readiness into one workflow.',
+    category: 'Business',
+    headline: 'People operations software that keeps employee workflows organized and payroll-ready.',
     description:
-      'A streamlined HR platform for growing companies that want better visibility across attendance, leave, approvals, and employee records without a heavy enterprise setup.',
-    features: ['Employee directory and records', 'Leave and approval workflows', 'Payroll-ready attendance data'],
+      'A premium HRMS for SMEs and growing companies that want cleaner people operations across attendance, leave, approvals, and employee records.',
+    features: ['Employee records and directory', 'Leave and approval workflows', 'Payroll-ready attendance visibility'],
     benefits: [
-      'Make team operations faster with cleaner approval flows',
-      'Give managers a simple review surface instead of chat-based requests',
-      'Keep people data current without duplicate admin work',
+      'Reduce back-and-forth in manager approvals',
+      'Keep employee data centralized and up to date',
+      'Support faster admin cycles for payroll preparation',
     ],
+    screenshots: ['People operations dashboard', 'Leave approval workflow', 'Employee directory experience'],
     metrics: [
-      { label: 'Manager response time', value: '-53%' },
-      { label: 'Payroll prep cycle', value: '2x faster' },
-      { label: 'Employee visibility', value: '100%' },
+      { label: 'Manager response lift', value: '2x faster' },
+      { label: 'Payroll prep flow', value: 'Streamlined' },
+      { label: 'SME fit', value: 'Excellent' },
     ],
-    primaryCta: { label: 'Try Live Demo', href: '/hrms/demo' },
-    secondaryCta: { label: 'Get Pricing', href: '/pricing' },
+    primaryCta: { label: 'Request Demo', href: '/contact' },
+    secondaryCta: { label: 'View Products', href: '/products' },
   },
   {
     slug: 'automation-suite',
+    categoryKey: 'Operations',
     icon: FiZap,
-    name: 'Qode27 Automation Suite',
-    category: 'Operations Automation',
-    headline: 'Automate reminders, approvals, and internal process handoffs without adding complexity.',
+    name: 'Automation Suite by Qode27',
+    category: 'Operations',
+    headline: 'Business automation apps for approvals, reminders, and daily process execution.',
     description:
-      'A modular automation layer for finance, admin, and service teams that want to remove repetitive work while keeping full visibility over every operational step.',
-    features: ['Approval routing engine', 'Automated reminders and follow-ups', 'Process dashboards and activity logs'],
+      'An automation suite for SMEs that want clean internal workflow systems for approvals, reminders, and high-visibility operations.',
+    features: ['Approval routing engine', 'Automated reminders and follow-ups', 'Process dashboards and logs'],
     benefits: [
-      'Eliminate repetitive manual coordination across internal teams',
-      'Keep leaders informed with lightweight operational dashboards',
-      'Turn fragile process knowledge into repeatable product workflows',
+      'Remove repetitive coordination work',
+      'Keep process ownership visible across teams',
+      'Turn fragile routines into repeatable app-driven flows',
     ],
+    screenshots: ['Workflow dashboard', 'Approval automation view', 'Operational activity feed'],
     metrics: [
       { label: 'Manual follow-ups reduced', value: '-61%' },
-      { label: 'Approval SLA', value: '<4 hrs' },
       { label: 'Operational clarity', value: 'High' },
+      { label: 'Automation fit', value: 'SME-ready' },
     ],
-    primaryCta: { label: 'Talk to Qode27', href: '/contact' },
-    secondaryCta: { label: 'Get Pricing', href: '/pricing' },
+    primaryCta: { label: 'Request Demo', href: '/contact' },
+    secondaryCta: { label: 'View Products', href: '/products' },
   },
 ]
 
@@ -158,77 +175,77 @@ export const pricingPlans: PricingPlan[] = [
   {
     name: 'Starter',
     price: 'Custom',
-    description: 'For smaller teams moving from spreadsheets to a dependable product workflow.',
-    features: ['Core modules', 'Guided onboarding', 'Email support', 'Usage-based expansion'],
-    cta: 'Talk to Sales',
+    description: 'A clean launch plan for SMEs adopting packaged business software for the first time.',
+    features: ['Core app setup', 'Guided onboarding', 'WhatsApp support', 'Business-friendly deployment'],
+    cta: 'Request Demo',
   },
   {
     name: 'Growth',
     price: 'Custom',
-    description: 'For scaling teams that want automation, reporting, and stronger operational control.',
-    features: ['Workflow automation', 'Advanced analytics', 'Priority support', 'Multi-team permissions'],
-    cta: 'Get Pricing',
+    description: 'For companies that want stronger visibility, broader workflows, and app-store style scalability.',
+    features: ['Expanded modules', 'Priority support', 'Operational reporting', 'Multi-team rollout'],
+    cta: 'Request Demo',
     featured: true,
   },
   {
     name: 'Enterprise',
     price: 'Custom',
-    description: 'For complex orgs that need tailored rollout, governance, and process design support.',
-    features: ['Custom implementation', 'Executive onboarding', 'Dedicated success partner', 'Operational consulting'],
-    cta: 'Book Strategy Call',
+    description: 'For larger businesses that need implementation support, configuration depth, and tailored rollout.',
+    features: ['Custom rollout planning', 'Advanced support', 'Workflow consulting', 'Long-term partnership'],
+    cta: 'Request Demo',
   },
 ]
 
 export const contactMethods: ContactMethod[] = [
   {
-    title: 'Email',
-    value: 'qode27business@gmail.com',
-    description: 'Best for demos, pricing conversations, and product discovery.',
-    href: 'mailto:qode27business@gmail.com',
-    icon: FiMail,
+    title: 'WhatsApp',
+    value: '+91 7022556960',
+    description: 'Primary demo request channel for fast responses and product conversations.',
+    href: 'https://wa.me/917022556960?text=Hello%20Qode27,%20I%20would%20like%20a%20demo',
+    icon: FiArrowRight,
   },
   {
     title: 'Phone',
     value: '+91 7022556960',
-    description: 'Reach Qode27 directly for implementation or procurement discussions.',
+    description: 'Call for direct discussion on deployment, fit, and pricing.',
     href: 'tel:+917022556960',
-    icon: FiArrowRight,
+    icon: FiUsers,
   },
   {
-    title: 'Strategy Intro',
-    value: 'Product-first rollout',
-    description: 'We position each implementation around adoption, speed, and measurable process wins.',
-    href: '/pricing',
-    icon: FiBriefcase,
+    title: 'Email',
+    value: 'qode27business@gmail.com',
+    description: 'For procurement notes, detailed requirements, and follow-up.',
+    href: 'mailto:qode27business@gmail.com',
+    icon: FiMail,
   },
 ]
 
 export const trustPoints = [
-  'Healthcare, finance, and operations-friendly workflows',
-  'Fast adoption for non-technical teams',
-  'Premium visual polish with practical admin UX',
-  'Implementation support that stays grounded in real operations',
+  'All your business software in one place',
+  'From HR to Hospital — we’ve got you covered',
+  'Built for Indian businesses and SME realities',
+  'Premium apps with fast deployment and practical pricing',
 ]
 
 export const pricingNotes = [
   {
-    icon: FiClock,
-    title: 'Fast rollout',
-    text: 'Scoped launches keep the first version narrow, useful, and ready for team adoption.',
-  },
-  {
     icon: FiCheckCircle,
-    title: 'Clear fit',
-    text: 'We recommend only the modules and workflows that make sense for your current stage.',
+    title: 'Built for Indian businesses',
+    text: 'Each app is packaged for teams that need practical adoption, clear workflows, and dependable support.',
   },
   {
-    icon: FiCreditCard,
-    title: 'Practical pricing',
-    text: 'Engagements are structured around value and rollout complexity, not bloated enterprise overhead.',
+    icon: FiClock,
+    title: 'Fast deployment (7–10 days)',
+    text: 'Focused rollout plans help your team move from interest to implementation quickly.',
+  },
+  {
+    icon: FiTrendingUp,
+    title: 'Affordable SaaS solutions',
+    text: 'Qode27 keeps the product experience premium while staying commercially realistic for SMEs.',
   },
 ]
 
-export const footerLinks = navigation
+export const footerLinks = navigation.filter((item) => item.label !== 'Categories')
 
 export function getProductBySlug(slug?: string) {
   return products.find((product) => product.slug === slug)

@@ -13,7 +13,7 @@ const socials = [
 
 export default function Footer() {
   return (
-    <footer className="relative z-10 border-t border-black/6 bg-[#f6f8f8]">
+    <footer className="relative z-10 border-t border-[var(--color-gold)]/12 bg-[#faf7ee]">
       <Container className="py-12">
         <div className="grid gap-10 lg:grid-cols-[1.15fr_0.85fr_0.9fr]">
           <div className="max-w-md">
@@ -21,10 +21,10 @@ export default function Footer() {
               <BrandLogo className="h-12 sm:h-14 max-w-[12rem] sm:max-w-[14rem]" />
             </NavLink>
             <p className="mt-4 text-sm leading-7 text-neutral-600">
-              Qode27 builds premium SaaS products for healthcare, people operations, and business automation teams that need software with adoption built in.
+              Qode27 is a premium business software app store for SMEs looking for healthcare, HR, finance, and operations applications in one place.
             </p>
             <p className="mt-4 text-xs font-semibold uppercase tracking-[0.28em] text-[var(--color-accent-strong)]">
-              Product-first business systems
+              Business software app store
             </p>
           </div>
 
@@ -44,7 +44,7 @@ export default function Footer() {
             <div className="mt-4 space-y-3 text-sm text-neutral-600">
               <p>qode27business@gmail.com</p>
               <p>+91 7022556960</p>
-              <p>Bengaluru, India</p>
+              <p>Hyderabad, India</p>
             </div>
             <div className="mt-5 flex items-center gap-3">
               {socials.map(({ icon, href, label }) => {
