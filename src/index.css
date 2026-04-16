@@ -81,7 +81,32 @@
     min-height: 100vh;
     background:
       radial-gradient(circle at top, color-mix(in srgb, var(--demo-secondary) 18%, transparent), transparent 38%),
-      linear-gradient(180deg, #f8fbfd 0%, #f3f7fb 100%);
+      linear-gradient(180deg, var(--demo-page) 0%, color-mix(in srgb, var(--demo-page) 84%, white) 100%);
+    color: var(--demo-ink);
+  }
+
+  .demo-shell--enterprise {
+    background:
+      radial-gradient(circle at top, rgba(124, 142, 252, 0.18), transparent 35%),
+      linear-gradient(180deg, #f5f8ff 0%, #edf3ff 100%);
+  }
+
+  .demo-shell--workflow {
+    background:
+      radial-gradient(circle at top, rgba(52, 211, 153, 0.16), transparent 34%),
+      linear-gradient(180deg, #f3fbfb 0%, #eef8f8 100%);
+  }
+
+  .demo-shell--operations {
+    background:
+      radial-gradient(circle at top, rgba(234, 88, 12, 0.12), transparent 34%),
+      linear-gradient(180deg, #eef1f4 0%, #f6f7f8 100%);
+  }
+
+  .demo-shell--command {
+    background:
+      radial-gradient(circle at top, rgba(250, 204, 21, 0.08), transparent 30%),
+      linear-gradient(180deg, #121212 0%, #1a1a1a 100%);
   }
 
   .nav-link {

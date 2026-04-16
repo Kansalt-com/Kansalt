@@ -1,6 +1,7 @@
 import { motion as Motion } from 'framer-motion'
 import { FiArrowRight, FiMessageSquare } from 'react-icons/fi'
 import { demoApps, getDemoRoute, buildDemoRequestPath } from '../../config/demo-apps'
+import { DemoProductPreview } from '../../components/demo/DemoPrimitives'
 import Container from '../../components/ui/Container'
 import Seo from '../../components/ui/Seo'
 import Button from '../../components/ui/Button'
@@ -51,6 +52,8 @@ export default function DemoCatalogPage() {
                     <p className="mt-3 max-w-2xl text-sm leading-7 text-white/74">{app.summary}</p>
                   </div>
                   <div className="space-y-5 p-7">
+                    <DemoProductPreview app={app} />
+                    <p className="text-xs font-medium uppercase tracking-[0.18em] text-slate-500">{app.identity.productHint}</p>
                     <div className="grid gap-3 sm:grid-cols-3">
                       {app.heroMetrics.map((metric) => (
                         <div key={metric.label} className="rounded-[1.2rem] bg-slate-50 p-4">

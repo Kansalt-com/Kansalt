@@ -47,6 +47,28 @@ export type DemoActionItem = {
   variant?: 'primary' | 'secondary'
 }
 
+export type DemoChromeStyle = 'enterprise-sidebar' | 'workflow-topbar' | 'operations-rail' | 'command-center'
+
+export type DemoDensityMode = 'comfortable' | 'compact' | 'dense' | 'live'
+
+export type DemoCardStyle = 'soft' | 'clinical' | 'industrial' | 'tactical'
+
+export type DemoTableStyle = 'clean' | 'clinical' | 'warehouse' | 'board'
+
+export type DemoPreviewVariant = 'hrms' | 'hms' | 'inventory' | 'truck-parking'
+
+export type DemoAppIdentity = {
+  navStyle: DemoChromeStyle
+  densityMode: DemoDensityMode
+  cardStyle: DemoCardStyle
+  tableStyle: DemoTableStyle
+  previewVariant: DemoPreviewVariant
+  typography: 'corporate' | 'clinical' | 'operational' | 'command'
+  dashboardLabel: string
+  motionStyle: 'calm' | 'precise' | 'mechanical' | 'urgent'
+  productHint: string
+}
+
 export type DemoAppConfig = {
   slug: DemoAppSlug
   solutionSlug: SolutionSlug
@@ -60,8 +82,13 @@ export type DemoAppConfig = {
     secondary: string
     surface: string
     gradient: string
+    ink: string
+    page: string
+    panel: string
+    line: string
   }
   icon: IconType
+  identity: DemoAppIdentity
   heroMetrics: DemoMetric[]
   demoEnabled: boolean
   requestDemoOnly: boolean
@@ -101,4 +128,8 @@ export type DemoThemeStyle = CSSProperties & {
   '--demo-secondary'?: string
   '--demo-surface'?: string
   '--demo-gradient'?: string
+  '--demo-ink'?: string
+  '--demo-page'?: string
+  '--demo-panel'?: string
+  '--demo-line'?: string
 }

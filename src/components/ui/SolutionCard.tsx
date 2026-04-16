@@ -2,6 +2,7 @@ import { createElement } from 'react'
 import { motion as Motion } from 'framer-motion'
 import { FiArrowRight } from 'react-icons/fi'
 import { Link } from 'react-router-dom'
+import { DemoProductPreview } from '../demo/DemoPrimitives'
 import { getDemoAppBySolutionSlug, getDemoRoute } from '../../config/demo-apps'
 import type { Solution } from '../../data/solutions'
 import { buildRequestDemoPath } from '../../data/solutions'
@@ -45,6 +46,12 @@ export default function SolutionCard({ solution, featured = false }: SolutionCar
       ) : null}
       <h3 className="mt-3 text-[1.7rem] font-semibold tracking-[-0.04em] text-slate-950">{solution.name}</h3>
       <p className="mt-4 text-base leading-7 text-slate-600">{solution.cardDescription}</p>
+      {demoApp ? (
+        <div className="mt-6">
+          <DemoProductPreview app={demoApp} />
+          <p className="mt-3 text-xs font-medium uppercase tracking-[0.18em] text-slate-500">{demoApp.identity.productHint}</p>
+        </div>
+      ) : null}
       <div className="mt-6 space-y-5 rounded-[1.3rem] bg-slate-50 p-5">
         <div>
           <p className="text-[0.7rem] font-semibold uppercase tracking-[0.22em] text-slate-500">Problem</p>
@@ -67,16 +74,16 @@ export default function SolutionCard({ solution, featured = false }: SolutionCar
           </Button>
         ) : null}
         <div className="flex flex-col gap-3 sm:flex-row">
-        <Link
-          to={`/solutions/${solution.slug}`}
-          className="inline-flex min-h-12 items-center justify-center gap-2 rounded-xl border border-slate-200 px-5 py-3 text-sm font-semibold text-slate-900 hover:border-[var(--color-accent)] hover:text-[var(--color-accent)]"
-        >
-          View Details
-          <FiArrowRight />
-        </Link>
-        <Button href={buildRequestDemoPath(solution.name)} variant="primary" size="sm" className="justify-center">
-          Request Demo
-        </Button>
+          <Link
+            to={`/solutions/${solution.slug}`}
+            className="inline-flex min-h-12 items-center justify-center gap-2 rounded-xl border border-slate-200 px-5 py-3 text-sm font-semibold text-slate-900 hover:border-[var(--color-accent)] hover:text-[var(--color-accent)]"
+          >
+            View Details
+            <FiArrowRight />
+          </Link>
+          <Button href={buildRequestDemoPath(solution.name)} variant="primary" size="sm" className="justify-center">
+            Request Demo
+          </Button>
         </div>
       </div>
     </Motion.article>

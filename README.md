@@ -28,6 +28,16 @@ The site now includes a reusable frontend-only demo framework that runs entirely
 - Demo pages block live network/API requests through `useDemoNetworkGuard`
 - Demo routes are lazy loaded, so the main marketing site stays lightweight
 - Demo availability is controlled centrally from `src/config/demo-apps.ts`
+- The shared engine now supports app-specific identity on top of shared state and routing:
+  - nav style
+  - density mode
+  - card style
+  - table style
+  - preview variant
+  - typography tone
+  - dashboard label
+  - motion style
+  - product hint
 
 ### Key folders
 
@@ -55,18 +65,30 @@ The site now includes a reusable frontend-only demo framework that runs entirely
    - `tagline`
    - `summary`
    - `accent`
+   - `identity`
    - `heroMetrics`
    - `demoEnabled`
    - `requestDemoOnly`
    - `modulePath`
-4. If the app should be public, set:
+4. Use the `identity` object to make the product feel unique rather than just recolored:
+   - `navStyle`
+   - `densityMode`
+   - `cardStyle`
+   - `tableStyle`
+   - `previewVariant`
+   - `typography`
+   - `dashboardLabel`
+   - `motionStyle`
+   - `productHint`
+5. Compose the page using shared primitives differently per app. The visual goal is unique product identity, not shared wireframes.
+6. If the app should be public, set:
    - `demoEnabled: true`
    - `requestDemoOnly: false`
-5. If the app should stay private and only collect leads, set:
+7. If the app should stay private and only collect leads, set:
    - `demoEnabled: true`
    - `requestDemoOnly: true`
-6. If the related product already exists in `src/data/solutions.ts`, the solution cards and detail page will automatically pick up the interactive demo or request-only state from the registry mapping.
-7. Run:
+8. If the related product already exists in `src/data/solutions.ts`, the solution cards and detail page will automatically pick up the interactive demo or request-only state from the registry mapping.
+9. Run:
    - `npm.cmd run typecheck`
    - `npm.cmd run build`
 
